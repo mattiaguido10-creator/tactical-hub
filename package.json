@@ -1,0 +1,16 @@
+{
+  "name": "tactical-hub-pro",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Tactical Hub Pro 2026/27 — modular football analysis app with local anti-CORS sync server",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node tests/mapper.test.js && node tests/live_xi.test.js",
+    "test:mapper": "node tests/mapper.test.js",
+    "test:live": "node tests/live_xi.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

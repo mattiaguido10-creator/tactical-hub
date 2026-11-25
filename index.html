@@ -1,265 +1,20 @@
-html
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tactical Hub Pro | Serie A 2026/27 Definitivo</title>
+    <title>Tactical Hub Pro | Serie A · Premier League 2026/27</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-base: #080b11;
-            --bg-surface: #101520;
-            --bg-elevated: #171e2e;
-            --border-subtle: #1e273a;
-            --border-strong: #2d3a54;
-            --accent-club: #38bdf8;
-            --accent-amber: #f59e0b;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --pitch-grass: #102017;
-            --pitch-lines: rgba(255, 255, 255, 0.25);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-base); color: var(--text-primary); padding: 20px; line-height: 1.5; }
-        .container { max-width: 1340px; margin: 0 auto; }
-
-        /* HEADER */
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 20px;
-            flex-wrap: wrap; gap: 14px;
-        }
-        .brand-block { display: flex; align-items: center; gap: 10px; }
-        .brand-title { font-size: 1.15rem; font-weight: 900; letter-spacing: 0.5px; color: #fff; text-transform: uppercase; }
-        .brand-title span { color: #38bdf8; }
-        .live-pill {
-            display: flex; align-items: center; gap: 6px; font-size: 0.68rem; font-weight: 800;
-            padding: 3px 9px; border-radius: 20px; background: rgba(16, 185, 129, 0.12);
-            color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); text-transform: uppercase;
-        }
-        .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green); animation: blink 1.4s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        .controls-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .segmented-league { display: flex; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 3px; }
-        .seg-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 0.8rem; font-weight: 700; padding: 6px 13px; border-radius: 6px; cursor: pointer; transition: 0.15s; }
-        .seg-btn.active { background: #1e2638; color: #fff; }
-
-        /* DROPDOWN */
-        .coach-picker-wrapper { position: relative; min-width: 280px; }
-        .coach-picker-trigger {
-            display: flex; align-items: center; justify-content: space-between; width: 100%;
-            background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px;
-            padding: 7px 13px; color: #fff; cursor: pointer; transition: 0.15s;
-        }
-        .coach-picker-trigger:hover { border-color: var(--border-strong); background: var(--bg-elevated); }
-        .picker-profile { display: flex; align-items: center; gap: 10px; }
-        .picker-profile img { width: 25px; height: 25px; object-fit: contain; }
-        .picker-meta { text-align: left; line-height: 1.2; }
-        .picker-coach-name { font-size: 0.86rem; font-weight: 700; }
-        .picker-team-name { font-size: 0.7rem; color: var(--text-muted); }
-        .picker-chevron { font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
-        .coach-picker-wrapper.open .picker-chevron { transform: rotate(180deg); }
-
-        .coach-picker-menu {
-            position: absolute; top: calc(100% + 6px); left: 0; width: 100%; min-width: 310px;
-            max-height: 390px; overflow-y: auto; background: #121825; border: 1px solid var(--border-strong);
-            border-radius: 10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7); z-index: 1000; padding: 6px; display: none;
-        }
-        .coach-picker-wrapper.open .coach-picker-menu { display: block; }
-        .picker-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 11px; border-radius: 6px; cursor: pointer; transition: 0.12s; }
-        .picker-item:hover { background: #1b2336; }
-        .picker-item.active { background: #202b40; border-left: 3px solid var(--accent-club); }
-        .item-identity { display: flex; align-items: center; gap: 10px; }
-        .item-identity img { width: 24px; height: 24px; object-fit: contain; }
-        .item-coach { font-size: 0.84rem; font-weight: 700; color: #fff; }
-        .item-team { font-size: 0.7rem; color: var(--text-secondary); }
-        .item-system-tag { font-size: 0.68rem; font-weight: 700; background: #1e293b; padding: 2px 6px; border-radius: 4px; color: var(--accent-amber); font-family: monospace; }
-
-        .device-toggle-btn { background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-size: 0.78rem; font-weight: 600; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
-
-        /* OVERVIEW PANEL */
-        .overview-panel {
-            background: linear-gradient(135deg, var(--bg-surface) 0%, #0d111a 100%);
-            border: 1px solid var(--border-subtle); border-top: 3px solid var(--accent-club);
-            border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between;
-            align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;
-        }
-        .overview-left { display: flex; align-items: center; gap: 18px; }
-        .team-crest { width: 64px; height: 64px; object-fit: contain; }
-        .overview-headings h1 { font-size: 1.75rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
-        .style-badge {
-            display: inline-block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
-            padding: 2px 8px; border-radius: 4px; background: rgba(56, 189, 248, 0.14); color: var(--accent-club); margin-right: 8px;
-        }
-        .overview-meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; }
-        .system-badge-large { background: #0c121e; border: 1px solid #2b3852; padding: 8px 18px; border-radius: 8px; text-align: center; }
-        .system-badge-large .label { display: block; font-size: 0.62rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        .system-badge-large .val { font-size: 1.35rem; font-weight: 800; font-family: monospace; color: #fff; }
-
-        /* NAV TABS */
-        .section-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 20px; overflow-x: auto; }
-        .sec-tab-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; padding: 10px 16px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: 0.15s; }
-        .sec-tab-btn:hover { color: #fff; }
-        .sec-tab-btn.active { color: #fff; border-bottom-color: var(--accent-club); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* TOOLBAR SOPRA IL CAMPO */
-        .pitch-toolbar {
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
-            margin-bottom: 12px; background: var(--bg-surface); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-subtle);
-        }
-        .last-match-status { font-size: 0.78rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
-        .last-match-status strong { color: #fff; }
-        .pitch-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .mini-tool-btn { background: #1a2233; border: 1px solid #2d3a54; color: #cbd5e1; font-size: 0.74rem; font-weight: 700; padding: 5px 10px; border-radius: 6px; cursor: pointer; transition: 0.15s; }
-        .mini-tool-btn.active { background: var(--accent-club); color: #080b11; border-color: var(--accent-club); }
-
-        /* LAYOUT CAMPO + COLONNA DESTRA */
-        .match-analysis-grid { display: grid; grid-template-columns: 1fr 410px; gap: 22px; align-items: start; }
-        .pitch-board {
-            position: relative; background-color: var(--pitch-grass);
-            background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 48px, transparent 48px, transparent 96px);
-            border: 1px solid #27352b; border-radius: 12px; aspect-ratio: 1.47 / 1; width: 100%; overflow: hidden;
-            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.65);
-        }
-        .pitch-svg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .zones-overlay { opacity: 0; transition: opacity 0.25s; }
-        .zones-overlay.visible { opacity: 1; }
-
-        .tactical-arrow { fill: none; stroke: #ffffff; stroke-width: 2.2; stroke-dasharray: 6 3; animation: dashFlow 1s linear infinite; opacity: 0; transition: opacity 0.2s; }
-        .tactical-arrow.active { opacity: 0.95; }
-        @keyframes dashFlow { to { stroke-dashoffset: -9; } }
-
-        .player-pin { position: absolute; transform: translate(-50%, -50%); width: 34px; height: 34px; cursor: pointer; z-index: 20; transition: transform 0.15s; }
-        .player-pin:hover, .player-pin.selected { transform: translate(-50%, -50%) scale(1.16); z-index: 35; }
-        .player-badge {
-            width: 34px; height: 34px; border-radius: 50%; background: #1e293b; color: #fff;
-            display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem;
-            border: 2px solid var(--accent-club); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); transition: 0.15s;
-        }
-        .player-pin:hover .player-badge, .player-pin.selected .player-badge { background: #ffffff; color: #080b11; border-color: #ffffff; }
-        .player-name-tag {
-            position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px;
-            background: rgba(10, 14, 22, 0.95); color: #e2e8f0; font-size: 0.67rem; font-weight: 700;
-            padding: 1px 6px; border-radius: 4px; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); pointer-events: none;
-        }
-
-        /* COLONNA DESTRA: HUD + PIAZZATI + BALLOTTAGGI */
-        .sidebar-right-col { display: flex; flex-direction: column; gap: 14px; }
-
-        .scouting-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; }
-        .scouting-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px; margin-bottom: 12px; }
-        .scouting-head-left { display: flex; align-items: center; gap: 12px; }
-        .scouting-kit-number {
-            width: 38px; height: 38px; border-radius: 8px; background: #1a2234; color: #fff;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; border: 1px solid #334155; font-family: monospace;
-        }
-        .scouting-title h3 { font-size: 1.05rem; font-weight: 800; color: #fff; line-height: 1.2; }
-        .scouting-role { font-size: 0.66rem; font-weight: 700; color: var(--accent-amber); text-transform: uppercase; letter-spacing: 0.04em; }
-        .titolarita-pill {
-            font-size: 0.66rem; font-weight: 800; padding: 3px 7px; border-radius: 6px;
-            background: rgba(16, 185, 129, 0.14); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); white-space: nowrap;
-        }
-        .titolarita-pill.warn { background: rgba(245, 158, 11, 0.14); color: var(--accent-amber); border-color: rgba(245, 158, 11, 0.3); }
-        .scouting-entry { background: #0c1019; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
-        .scouting-entry:last-child { margin-bottom: 0; }
-        .scouting-entry-label { font-size: 0.61rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
-        .scouting-entry-body { font-size: 0.82rem; color: #cbd5e1; line-height: 1.4; }
-
-        /* BOX RIGORISTI, PUNIZIONI, CALCI D'ANGOLO */
-        .setpieces-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px 16px; }
-        .setpieces-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .sp-col { border-right: 1px solid var(--border-subtle); padding-right: 8px; }
-        .sp-col:last-child { border-right: none; padding-right: 0; }
-        .sp-title { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
-        .sp-list { display: flex; flex-direction: column; gap: 3px; }
-        .sp-player { font-size: 0.76rem; font-weight: 700; color: #e2e8f0; display: flex; align-items: center; gap: 5px; }
-        .sp-rank { font-size: 0.64rem; color: var(--accent-amber); font-family: monospace; font-weight: 800; }
-
-        /* PANNELLO BALLOTTAGGI */
-        .ballottaggi-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; }
-        .ballottaggi-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; margin-bottom: 10px; }
-        .ball-title { font-size: 0.88rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 7px; }
-        .ball-sub { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-
-        .ball-list-scroll { max-height: 220px; overflow-y: auto; padding-right: 4px; scrollbar-width: thin; scrollbar-color: #2d3a54 transparent; }
-        .ball-row { margin-bottom: 9px; padding: 5px 7px; border-radius: 7px; cursor: pointer; transition: background 0.15s; border: 1px solid transparent; }
-        .ball-row:hover { background: rgba(255, 255, 255, 0.03); border-color: var(--border-subtle); }
-        .ball-row:last-child { margin-bottom: 0; }
-        .ball-names { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; margin-bottom: 4px; }
-        .ball-pct-left { color: var(--accent-amber); font-family: monospace; font-size: 0.8rem; font-weight: 800; min-width: 34px; }
-        .ball-pct-right { color: var(--text-secondary); font-family: monospace; font-size: 0.8rem; font-weight: 800; min-width: 34px; text-align: right; }
-        .ball-players { color: #f8fafc; text-align: center; flex: 1; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ball-players span.sep { color: var(--text-muted); margin: 0 4px; font-weight: 400; }
-        .ball-players span.backup { color: var(--text-secondary); font-weight: 600; }
-        .ball-bar-track { height: 5px; width: 100%; background: #1e2638; border-radius: 4px; overflow: hidden; display: flex; }
-        .ball-bar-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #fbbf24); border-radius: 4px; transition: width 0.35s ease; }
-
-        /* DNA & TABELLE */
-        .dna-layout { display: grid; grid-template-columns: 360px 1fr; gap: 20px; margin-bottom: 20px; }
-        .dna-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; }
-        .dna-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-club); margin-bottom: 12px; }
-        .metric-row { margin-bottom: 12px; }
-        .metric-head { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; }
-        .metric-bar-bg { height: 7px; background: #1e2638; border-radius: 4px; overflow: hidden; }
-        .metric-bar-fill { height: 100%; background: var(--accent-club); border-radius: 4px; transition: width 0.4s ease; }
-        .tactical-phases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-        .phase-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; }
-        .phase-card-title { font-size: 0.96rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
-        .phase-card p { color: var(--text-secondary); font-size: 0.88rem; }
-
-        .table-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; }
-        .table-header-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 10px; }
-        .table-responsive { overflow-x: auto; }
-        table.pro-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; }
-        table.pro-table th { background: #0d121c; color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 11px 14px; border-bottom: 1px solid var(--border-subtle); }
-        table.pro-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-        table.pro-table tr:hover { background: #171f30; cursor: pointer; }
-        .team-cell { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-        .team-cell img { width: 22px; height: 22px; object-fit: contain; }
-        .pos-badge { display: inline-block; width: 24px; text-align: center; font-weight: 800; font-family: monospace; border-radius: 4px; padding: 2px 0; font-size: 0.8rem; }
-        .pos-ucl { border-left: 3px solid var(--accent-green); color: var(--accent-green); }
-        .pos-uel { border-left: 3px solid var(--accent-blue); color: var(--accent-blue); }
-        .pos-rel { border-left: 3px solid var(--accent-red); color: var(--accent-red); }
-        .pts-cell { font-weight: 900; font-family: monospace; color: #fff; font-size: 0.95rem; }
-        .leaders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-        @media (max-width: 992px) { .match-analysis-grid, .dna-layout, .leaders-grid { grid-template-columns: 1fr; } }
-        body.mobile-mode { padding: 10px; }
-        body.mobile-mode .match-analysis-grid, body.mobile-mode .dna-layout, body.mobile-mode .leaders-grid { grid-template-columns: 1fr; }
-        body.mobile-mode .coach-picker-wrapper { width: 100%; }
-        body.mobile-mode .player-pin { width: 25px; height: 25px; }
-        body.mobile-mode .player-badge { width: 25px; height: 25px; font-size: 0.68rem; border-width: 1.5px; }
-        body.mobile-mode .player-name-tag { font-size: 0.56rem; padding: 1px 4px; }
-        body.mobile-mode .setpieces-grid { grid-template-columns: 1fr; }
-        body.mobile-mode .sp-col { border-right: none; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; }
-        body.mobile-mode .sp-col:last-child { border-bottom: none; padding-bottom: 0; }
-
-        .entry-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 11, 17, 0.95); z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .entry-modal-card { position: relative; background: #101520; border: 1px solid #2d3a54; border-radius: 12px; padding: 30px 24px; max-width: 420px; width: 100%; text-align: center; }
-        .entry-modal-close { position: absolute; top: 12px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
-        .modal-action-row { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .action-select-btn { padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 0.95rem; }
-        .btn-opt-desktop { background: #fff; color: #080b11; }
-        .btn-opt-mobile { background: #1e293b; color: #fff; border: 1px solid #334155; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div id="device-modal" class="entry-modal-overlay">
         <div class="entry-modal-card">
-            <button class="entry-modal-close" onclick="chiudiModalSubito('desktop')">✕</button>
-            <h2 style="font-size:1.3rem; margin-bottom:6px;">Tactical Hub 26/27</h2>
-            <p style="font-size:0.86rem; color:var(--text-secondary);">Scegli il dispositivo per ottimizzare il campo tattico:</p>
+            <button type="button" class="entry-modal-close" onclick="chiudiModalSubito('desktop')">✕</button>
+            <h2 style="font-size:1.3rem; margin-bottom:6px;">Tactical Hub 26/27 AUTO</h2>
+            <p style="font-size:0.86rem; color:var(--text-secondary);">Scegli il dispositivo (dati live e posizioni XI si aggiornano in automatico):</p>
             <div class="modal-action-row">
                 <button type="button" class="action-select-btn btn-opt-desktop" onclick="chiudiModalSubito('desktop')">💻 Computer (Desktop)</button>
                 <button type="button" class="action-select-btn btn-opt-mobile" onclick="chiudiModalSubito('mobile')">📱 Smartphone (Mobile)</button>
@@ -267,19 +22,52 @@ html
         </div>
     </div>
 
+    <script>
+        var currentDevice = 'desktop';
+        function chiudiModalSubito(t) {
+            try {
+                currentDevice = t || 'desktop';
+                var m = document.getElementById('device-modal');
+                if (m) { m.style.display = 'none'; if (m.parentNode) m.parentNode.removeChild(m); }
+                if (document.body) document.body.classList.toggle('mobile-mode', currentDevice === 'mobile');
+                var vi = document.getElementById('view-icon');
+                var vt = document.getElementById('view-text');
+                if (vi) vi.innerText = currentDevice === 'mobile' ? '💻' : '📱';
+                if (vt) vt.innerText = currentDevice === 'mobile' ? 'PC' : 'Mobile';
+            } catch (e) {
+                var m2 = document.getElementById('device-modal');
+                if (m2) m2.style.display = 'none';
+            }
+        }
+        function toggleDispositivo() { chiudiModalSubito(currentDevice === 'mobile' ? 'desktop' : 'mobile'); }
+    </script>
+
+    <div class="search-overlay" id="search-overlay" onclick="closeGlobalSearch()">
+        <div class="search-panel" onclick="event.stopPropagation()">
+            <div class="search-head">
+                <span class="search-icon">⌕</span>
+                <input type="text" id="global-search-input" class="search-input" autocomplete="off" placeholder="Cerca squadra, allenatore o giocatore..." oninput="renderGlobalSearch(this.value)">
+                <button type="button" class="search-close" onclick="closeGlobalSearch()">ESC</button>
+            </div>
+            <div id="search-results" class="search-results"></div>
+            <div class="search-hint">Ctrl + K per aprire • Esc per chiudere • Cerca in Serie A, Premier League e Resto del Mondo</div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <div class="brand-block">
-                <div class="brand-title">TACTICAL <span>HUB</span></div>
-                <div class="live-pill" id="live-badge"><span class="live-dot"></span> <span id="live-status-text">SERIE A 26/27</span></div>
+                <div class="brand-title">TACTICAL <span>HUB</span> PRO</div>
+                <span class="league-badge" id="league-badge">Serie A (Italy D1)</span>
+                <div class="live-pill" id="live-badge"><span class="live-dot"></span> <span id="live-status-text">AUTO-SYNC PRONTO</span></div>
+                <button type="button" class="sync-now-btn" id="auto-sync-btn" onclick="runFullAutoSync(true)">↻ Forza Sync Completo</button>
             </div>
-            
             <div class="controls-toolbar">
                 <div class="segmented-league">
-                    <button class="seg-btn active" id="btn-cat-seriea" onclick="selezionaCategoria('serie_a')">Serie A (20)</button>
-                    <button class="seg-btn" id="btn-cat-mondo" onclick="selezionaCategoria('resto_mondo')">Resto del Mondo</button>
+                    <button class="seg-btn active" id="btn-cat-seriea" data-league="serie_a" onclick="selezionaCategoria('serie_a')">Serie A (20)</button>
+                    <button class="seg-btn" id="btn-cat-premier" data-league="premier_league" onclick="selezionaCategoria('premier_league')">Premier League (20)</button>
+                    <button class="seg-btn" id="btn-cat-mondo" data-league="resto_mondo" onclick="selezionaCategoria('resto_mondo')">Resto del Mondo</button>
                 </div>
-
                 <div class="coach-picker-wrapper" id="coach-dropdown">
                     <button type="button" class="coach-picker-trigger" onclick="toggleDropdown(event)">
                         <div class="picker-profile">
@@ -293,7 +81,6 @@ html
                     </button>
                     <div class="coach-picker-menu" id="dropdown-menu-list"></div>
                 </div>
-
                 <button class="device-toggle-btn" id="view-toggle" onclick="toggleDispositivo()">
                     <span id="view-icon">📱</span> <span id="view-text">Mobile</span>
                 </button>
@@ -311,74 +98,81 @@ html
                     </div>
                 </div>
             </div>
-            <div class="system-badge-large">
-                <span class="label">Sistema</span>
-                <span class="val" id="coach-system">4-3-3</span>
+            <div class="overview-badges-right">
+                <div class="system-badge-large"><span class="label">Sistema</span><span class="val" id="coach-system">4-3-3</span></div>
+                <div class="system-badge-large"><span class="label">Non Possesso</span><span class="val" id="coach-nonposs-badge" style="color:var(--accent-amber); font-size:1rem;">4-4-2</span></div>
             </div>
         </div>
 
+        <div class="tactical-quick-strip" id="tactical-quick-strip"></div>
+
         <div class="section-tabs">
             <button class="sec-tab-btn active" id="tab-btn-campo" onclick="switchTab('campo', this)">Lavagna Tattica 11</button>
-            <button class="sec-tab-btn" id="tab-btn-dna" onclick="switchTab('dna', this)">DNA & Come Gioca</button>
+            <button class="sec-tab-btn" id="tab-btn-matchup" onclick="switchTab('matchup', this)">⚔ Matchup 11v11</button>
+            <button class="sec-tab-btn" id="tab-btn-dna" onclick="switchTab('dna', this)">DNA, Radar & Come Gioca</button>
             <button class="sec-tab-btn" id="tab-btn-classifica" onclick="switchTab('classifica', this)">Classifica Live</button>
-            <button class="sec-tab-btn" id="tab-btn-statistiche" onclick="switchTab('statistiche', this)">Marcatori & Assist</button>
+            <button class="sec-tab-btn" id="tab-btn-squadre" onclick="switchTab('squadre-stats', this)">Statistiche Squadre</button>
+            <button class="sec-tab-btn" id="tab-btn-statistiche" onclick="switchTab('statistiche', this)">Giocatori, Marcatori & Assist</button>
         </div>
 
-        <!-- TAB 1: LAVAGNA TATTICA + TIRATORI + BALLOTTAGGI -->
         <div id="campo" class="tab-content active">
             <div class="pitch-toolbar">
-                <div class="last-match-status" id="last-match-info">
-                    <span>📋</span> <span><strong>XI Verificato 26/27</strong></span>
-                </div>
+                <div class="last-match-status" id="last-match-info"><span>📋</span> <span><strong>XI Auto-Sync 26/27</strong></span></div>
                 <div class="pitch-actions">
-                    <button class="mini-tool-btn" id="btn-live-xi" onclick="toggleLiveLineup()">↻ XI Ultima Gara</button>
+                    <div class="phase-seg">
+                        <button class="phase-btn active" id="phase-base" onclick="setPitchPhase('base')">Base</button>
+                        <button class="phase-btn" id="phase-possesso" onclick="setPitchPhase('possesso')">Possesso</button>
+                        <button class="phase-btn" id="phase-difesa" onclick="setPitchPhase('difesa')">Non Possesso</button>
+                    </div>
+                    <button class="mini-tool-btn active" id="btn-live-xi" onclick="toggleLiveLineup()">↻ XI Ultima Gara</button>
                     <button class="mini-tool-btn" id="btn-all-arrows" onclick="toggleAllArrows()">➹ Tutte le Frecce</button>
                     <button class="mini-tool-btn" id="btn-zones" onclick="toggleZones()">▦ Zone Tattiche</button>
+                    <button class="mini-tool-btn" onclick="downloadPitchSVG()" title="Esporta la lavagna in SVG">⤓ SVG</button>
+                    <button class="mini-tool-btn" onclick="downloadPitchPNG()" title="Esporta la lavagna in PNG">⤓ PNG</button>
                 </div>
             </div>
 
             <div class="match-analysis-grid">
-                <div class="pitch-board" id="pitch">
-                    <svg class="pitch-svg-layer zones-overlay" id="zones-layer" viewBox="0 0 1000 680">
-                        <rect x="40" y="30" width="920" height="115" fill="rgba(56,189,248,0.06)" />
-                        <rect x="40" y="145" width="920" height="125" fill="rgba(245,158,11,0.07)" />
-                        <rect x="40" y="270" width="920" height="140" fill="rgba(255,255,255,0.04)" />
-                        <rect x="40" y="410" width="920" height="125" fill="rgba(245,158,11,0.07)" />
-                        <rect x="40" y="535" width="920" height="115" fill="rgba(56,189,248,0.06)" />
-                        <rect x="660" y="270" width="135" height="140" fill="rgba(239,68,68,0.12)" stroke="rgba(239,68,68,0.4)" stroke-dasharray="4 4" />
-                        <text x="672" y="292" fill="rgba(255,255,255,0.5)" font-size="14" font-weight="800">ZONA 14</text>
-                    </svg>
+                <div>
+                    <div class="pitch-board" id="pitch">
+                        <svg class="pitch-svg-layer zones-overlay" id="zones-layer" viewBox="0 0 1000 680">
+                            <rect x="40" y="30" width="920" height="115" fill="rgba(56,189,248,0.06)" />
+                            <rect x="40" y="145" width="920" height="125" fill="rgba(245,158,11,0.07)" />
+                            <rect x="40" y="270" width="920" height="140" fill="rgba(255,255,255,0.04)" />
+                            <rect x="40" y="410" width="920" height="125" fill="rgba(245,158,11,0.07)" />
+                            <rect x="40" y="535" width="920" height="115" fill="rgba(56,189,248,0.06)" />
+                            <rect x="660" y="270" width="135" height="140" fill="rgba(239,68,68,0.12)" stroke="rgba(239,68,68,0.4)" stroke-dasharray="4 4" />
+                            <text x="672" y="292" fill="rgba(255,255,255,0.5)" font-size="14" font-weight="800">ZONA 14</text>
+                        </svg>
+                        <svg class="pitch-svg-layer" viewBox="0 0 1000 680">
+                            <rect x="40" y="30" width="920" height="620" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <line x1="500" y1="30" x2="500" y2="650" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <circle cx="500" cy="340" r="85" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <circle cx="500" cy="340" r="3" fill="var(--pitch-lines)" />
+                            <rect x="40" y="165" width="165" height="350" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <rect x="40" y="255" width="60" height="170" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <circle cx="155" cy="340" r="3" fill="var(--pitch-lines)" />
+                            <path d="M 205 285 A 85 85 0 0 1 205 395" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <rect x="795" y="165" width="165" height="350" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <rect x="900" y="255" width="60" height="170" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                            <circle cx="845" cy="340" r="3" fill="var(--pitch-lines)" />
+                            <path d="M 795 285 A 85 85 0 0 0 795 395" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                        </svg>
+                        <svg class="pitch-svg-layer" id="arrows-layer" viewBox="0 0 1000 680"></svg>
+                        <div id="players-layer"></div>
+                    </div>
 
-                    <svg class="pitch-svg-layer" viewBox="0 0 1000 680">
-                        <rect x="40" y="30" width="920" height="620" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <line x1="500" y1="30" x2="500" y2="650" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <circle cx="500" cy="340" r="85" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <circle cx="500" cy="340" r="3" fill="var(--pitch-lines)" />
-                        <rect x="40" y="165" width="165" height="350" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <rect x="40" y="255" width="60" height="170" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <circle cx="155" cy="340" r="3" fill="var(--pitch-lines)" />
-                        <path d="M 205 285 A 85 85 0 0 1 205 395" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <rect x="795" y="165" width="165" height="350" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <rect x="900" y="255" width="60" height="170" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                        <circle cx="845" cy="340" r="3" fill="var(--pitch-lines)" />
-                        <path d="M 795 285 A 85 85 0 0 0 795 395" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
-                    </svg>
-
-                    <svg class="pitch-svg-layer" id="arrows-layer" viewBox="0 0 1000 680"></svg>
-                    <div id="players-layer"></div>
+                    <div class="live-boxscore-card" id="last-match-boxscore"></div>
+                    <div class="pitch-tactical-footer" id="pitch-tactical-footer"></div>
+                    <div class="live-news-strip" id="live-news-strip"></div>
                 </div>
 
-                <!-- COLONNA DESTRA -->
                 <div class="sidebar-right-col">
-                    <!-- SCHEDA GIOCATORE -->
                     <div class="scouting-panel">
                         <div class="scouting-header">
                             <div class="scouting-head-left">
                                 <div class="scouting-kit-number" id="hud-num">-</div>
-                                <div class="scouting-title">
-                                    <h3 id="hud-name">Seleziona</h3>
-                                    <div class="scouting-role" id="hud-role">-</div>
-                                </div>
+                                <div class="scouting-title"><h3 id="hud-name">Seleziona</h3><div class="scouting-role" id="hud-role">-</div></div>
                             </div>
                             <div class="titolarita-pill" id="hud-tit">95% TIT</div>
                         </div>
@@ -389,28 +183,18 @@ html
                         <div class="scouting-entry">
                             <div class="scouting-entry-label">Movimento & Spazi Attaccati</div>
                             <div class="scouting-entry-body" id="hud-movement">-</div>
+                            <div class="hud-extra-meta" id="hud-extra-meta"></div>
                         </div>
                     </div>
 
-                    <!-- RIGORISTI, PUNIZIONI & CALCI D'ANGOLO -->
                     <div class="setpieces-panel">
                         <div class="setpieces-grid">
-                            <div class="sp-col">
-                                <div class="sp-title">🥅 Rigoristi</div>
-                                <div class="sp-list" id="sp-pen"></div>
-                            </div>
-                            <div class="sp-col">
-                                <div class="sp-title">🎯 Punizioni</div>
-                                <div class="sp-list" id="sp-fk"></div>
-                            </div>
-                            <div class="sp-col">
-                                <div class="sp-title">🚩 Angoli</div>
-                                <div class="sp-list" id="sp-ck"></div>
-                            </div>
+                            <div class="sp-col"><div class="sp-title">🥅 Rigoristi</div><div class="sp-list" id="sp-pen"></div></div>
+                            <div class="sp-col"><div class="sp-title">🎯 Punizioni</div><div class="sp-list" id="sp-fk"></div></div>
+                            <div class="sp-col"><div class="sp-title">🚩 Angoli</div><div class="sp-list" id="sp-ck"></div></div>
                         </div>
                     </div>
 
-                    <!-- BALLOTTAGGI UFFICIALI -->
                     <div class="ballottaggi-panel">
                         <div class="ballottaggi-header">
                             <div class="ball-title"><span>⇄</span> Ballottaggi Ufficiali</div>
@@ -422,40 +206,87 @@ html
             </div>
         </div>
 
-        <!-- TAB 2: DNA TATTICO -->
-        <div id="dna" class="tab-content">
-            <div class="dna-layout">
-                <div class="dna-card">
-                    <div class="dna-title">Parametri Tattici Squadra</div>
-                    <div id="metrics-container"></div>
+
+        <div id="matchup" class="tab-content">
+            <div class="matchup-toolbar">
+                <div class="matchup-team-picker">
+                    <span class="matchup-side-label">Casa</span>
+                    <select class="stats-select" id="matchup-home-team" onchange="matchupSetTeam('home', this.value)"></select>
+                    <select class="stats-select" id="matchup-home-formation" onchange="matchupSetFormation('home', this.value)"></select>
                 </div>
+                <div class="matchup-vs">VS</div>
+                <div class="matchup-team-picker">
+                    <span class="matchup-side-label">Ospite</span>
+                    <select class="stats-select" id="matchup-away-team" onchange="matchupSetTeam('away', this.value)"></select>
+                    <select class="stats-select" id="matchup-away-formation" onchange="matchupSetFormation('away', this.value)"></select>
+                </div>
+                <div class="pitch-actions matchup-actions">
+                    <button class="mini-tool-btn" id="matchup-draw-btn" onclick="toggleMatchupDraw()">✎ Frecce Libere</button>
+                    <button class="mini-tool-btn" onclick="clearMatchupArrows()">⌫ Cancella Frecce</button>
+                    <button class="mini-tool-btn" onclick="resetMatchup()">↺ Reset</button>
+                    <button class="mini-tool-btn" onclick="downloadMatchupSVG()">⤓ SVG</button>
+                    <button class="mini-tool-btn" onclick="downloadMatchupPNG()">⤓ PNG</button>
+                </div>
+            </div>
+            <div class="matchup-board" id="matchup-board">
+                <svg class="pitch-svg-layer" viewBox="0 0 1000 680">
+                    <rect x="40" y="30" width="920" height="620" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <line x1="500" y1="30" x2="500" y2="650" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <circle cx="500" cy="340" r="85" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <circle cx="500" cy="340" r="3" fill="var(--pitch-lines)" />
+                    <rect x="40" y="165" width="165" height="350" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <rect x="40" y="255" width="60" height="170" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <circle cx="155" cy="340" r="3" fill="var(--pitch-lines)" />
+                    <path d="M 205 285 A 85 85 0 0 1 205 395" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <rect x="795" y="165" width="165" height="350" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <rect x="900" y="255" width="60" height="170" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                    <circle cx="845" cy="340" r="3" fill="var(--pitch-lines)" />
+                    <path d="M 795 285 A 85 85 0 0 0 795 395" fill="none" stroke="var(--pitch-lines)" stroke-width="1.6" />
+                </svg>
+                <svg class="pitch-svg-layer" id="matchup-arrows-layer" viewBox="0 0 1000 680"></svg>
+                <div id="matchup-players-layer"></div>
+            </div>
+            <div class="matchup-help" id="matchup-help"></div>
+            <div class="matchup-readout" id="matchup-readout"></div>
+        </div>
+        <div id="dna" class="tab-content">
+            <div class="radar-section-header">
+                <div>
+                    <h2 style="font-size:1.15rem; font-weight:800; color:#fff;">Profilo Tattico Radiale Allenatore (Offensive & Defensive Style)</h2>
+                    <div style="font-size:0.78rem; color:var(--text-secondary);">Grafico polare a 10 parametri stile DataScout • Passa sopra gli spicchi per i dettagli o clicca ↓ per scaricare</div>
+                </div>
+                <div class="pill-group">
+                    <button class="stat-pill active" id="radar-lang-en" onclick="setRadarLang('en')">Etichette DataScout (EN)</button>
+                    <button class="stat-pill" id="radar-lang-it" onclick="setRadarLang('it')">Etichette Italiano (IT)</button>
+                </div>
+            </div>
+            <div class="radar-cards-grid" id="radar-cards-container"></div>
+
+            <div class="dna-layout">
+                <div class="dna-card"><div class="dna-title">Parametri Tattici Squadra</div><div id="metrics-container"></div></div>
                 <div class="dna-card">
                     <div class="dna-title">Come Gioca il Mister (Analisi Stile)</div>
                     <p id="coach-essay" style="color:#e2e8f0; font-size:0.94rem; line-height:1.65; margin-bottom:16px;"></p>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                        <div class="scouting-entry" style="margin:0;">
-                            <div class="scouting-entry-label" style="color:var(--accent-green);">✓ Punti di Forza</div>
-                            <div class="scouting-entry-body" id="coach-strengths"></div>
-                        </div>
-                        <div class="scouting-entry" style="margin:0;">
-                            <div class="scouting-entry-label" style="color:var(--accent-red);">! Punti Deboli</div>
-                            <div class="scouting-entry-body" id="coach-weaknesses"></div>
-                        </div>
+                        <div class="scouting-entry" style="margin:0;"><div class="scouting-entry-label" style="color:var(--accent-green);">✓ Punti di Forza</div><div class="scouting-entry-body" id="coach-strengths"></div></div>
+                        <div class="scouting-entry" style="margin:0;"><div class="scouting-entry-label" style="color:var(--accent-red);">! Punti Deboli</div><div class="scouting-entry-body" id="coach-weaknesses"></div></div>
                     </div>
                 </div>
             </div>
+
+            <div class="dna-title" style="margin-bottom:10px;" id="dossier-title">Dossier Tattico Avanzato Serie A 2026/27</div>
+            <div class="dossier-grid" id="dossier-container"></div>
             <div class="tactical-phases-grid" id="fasi-container"></div>
         </div>
 
-        <!-- TAB 3: CLASSIFICA LIVE -->
         <div id="classifica" class="tab-content">
             <div class="table-card">
                 <div class="table-header-bar">
                     <div>
-                        <strong style="font-size:1.05rem;">Classifica Serie A 2026/2027</strong>
-                        <div style="font-size:0.74rem; color:var(--text-muted);" id="standings-subtitle">Clicca su una squadra per aprire subito la sua Lavagna Tattica</div>
+                        <strong style="font-size:1.05rem;" id="classifica-title">Classifica Serie A 2026/2027</strong>
+                        <div style="font-size:0.74rem; color:var(--text-muted);" id="standings-subtitle">Auto-sync attivo • Clicca su una squadra per aprire la Lavagna Tattica</div>
                     </div>
-                    <button class="mini-tool-btn active" onclick="syncLiveStandings(true)">↻ Aggiorna Live</button>
+                    <button class="mini-tool-btn active" onclick="runFullAutoSync(true)">↻ Aggiorna Tutto Live</button>
                 </div>
                 <div class="table-responsive">
                     <table class="pro-table">
@@ -466,939 +297,92 @@ html
             </div>
         </div>
 
-        <!-- TAB 4: MARCATORI & ASSIST -->
-        <div id="statistiche" class="tab-content">
-            <div class="leaders-grid">
-                <div class="table-card">
-                    <div class="table-header-bar"><strong>⚽ Classifica Marcatori 26/27</strong><span style="font-size:0.72rem; color:var(--text-muted);">Gol (Rigori)</span></div>
-                    <div class="table-responsive">
-                        <table class="pro-table">
-                            <thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>Gol</th></tr></thead>
-                            <tbody id="scorers-body"></tbody>
-                        </table>
+        <div id="squadre-stats" class="tab-content">
+            <div class="league-kpi-strip">
+                <div class="kpi-box"><div class="kpi-num" id="kpi-pg">110</div><div class="kpi-lbl">Partite Giocate</div></div>
+                <div class="kpi-box"><div class="kpi-num" id="kpi-gol" style="color:var(--accent-amber);">342</div><div class="kpi-lbl" id="kpi-gol-lbl">Gol Totali (3.11 / gara)</div></div>
+                <div class="kpi-box"><div class="kpi-num" id="kpi-over" style="color:var(--accent-green);">60.0%</div><div class="kpi-lbl">Partite Over 2.5</div></div>
+                <div class="kpi-box"><div class="kpi-num" id="kpi-btts" style="color:var(--accent-blue);">58.2%</div><div class="kpi-lbl">Gol/Gol (BTTS)</div></div>
+                <div class="kpi-box"><div class="kpi-num" id="kpi-cs">48</div><div class="kpi-lbl">Clean Sheet Totali</div></div>
+            </div>
+
+            <div class="stats-filter-bar">
+                <div class="pill-group">
+                    <button class="stat-pill active" onclick="setTeamStatsCat('generale', this)">Generale & Rating</button>
+                    <button class="stat-pill" onclick="setTeamStatsCat('attacco', this)">Attacco, Tiri & xG</button>
+                    <button class="stat-pill" onclick="setTeamStatsCat('possesso', this)">Possesso, Passaggi & Ritmo</button>
+                    <button class="stat-pill" onclick="setTeamStatsCat('difesa', this)">Difesa, Falli & Disciplina</button>
+                </div>
+                <input type="text" class="stats-search-input" id="team-stats-search" placeholder="Cerca squadra o mister..." oninput="renderTeamStatsTable()">
+            </div>
+
+            <div class="table-card">
+                <div class="table-header-bar">
+                    <div>
+                        <strong style="font-size:1.05rem;" id="team-stats-title">Statistiche Squadre Serie A 2026/2027 (Auto-Sync Live + Baseline Opta)</strong>
+                        <div style="font-size:0.74rem; color:var(--text-muted);" id="team-stats-sub">Clicca sulle colonne per ordinare • Punti, Gol, Tiri, Possesso, Corner, Falli, Cartellini e Clean Sheet si aggiornano in automatico</div>
                     </div>
                 </div>
-                <div class="table-card">
-                    <div class="table-header-bar"><strong>🎯 Classifica Assist Man 26/27</strong><span style="font-size:0.72rem; color:var(--text-muted);">Assist (Passaggi Chiave)</span></div>
+                <div class="table-responsive">
+                    <table class="pro-table"><thead id="team-stats-thead"></thead><tbody id="team-stats-tbody"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <div id="statistiche" class="tab-content">
+            <div class="leaders-grid">
+                <div class="table-card" style="margin-bottom:0;">
+                    <div class="table-header-bar"><strong>⚽ Classifica Marcatori 26/27</strong><span style="font-size:0.72rem; color:var(--accent-green);" id="scorers-sync-tag">Auto-Sync</span></div>
                     <div class="table-responsive">
-                        <table class="pro-table">
-                            <thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>Assist</th></tr></thead>
-                            <tbody id="assists-body"></tbody>
-                        </table>
+                        <table class="pro-table"><thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>Gol</th></tr></thead><tbody id="scorers-body"></tbody></table>
                     </div>
+                </div>
+                <div class="table-card" style="margin-bottom:0;">
+                    <div class="table-header-bar"><strong>🎯 Classifica Assist Man 26/27</strong><span style="font-size:0.72rem; color:var(--accent-green);" id="assists-sync-tag">Auto-Sync</span></div>
+                    <div class="table-responsive">
+                        <table class="pro-table"><thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>Assist</th></tr></thead><tbody id="assists-body"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-filter-bar" style="margin-top:20px;">
+                <div class="pill-group" id="player-stats-cats">
+                    <button class="stat-pill active" onclick="setPlayerStatCat('goals', this)">⚽ Goal</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('assists', this)">🎯 Assist</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('ga', this)">⚡ Gol + Assist</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('shotsTotal', this)">💥 Tiri Totali</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('shotsOnTarget', this)">🥅 Tiri in Porta</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('keyPasses', this)">🔑 Key Passes</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('passesTotal', this)">📐 Passaggi</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('dribbles', this)">💨 Dribbling</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('duels', this)">🛡️ Duelli & Contrasti</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('yellows', this)">🟨 Gialli & Falli</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('reds', this)">🟥 Rossi</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('minutes', this)">⏱️ Minuti</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('goalkeepers', this)">🧤 Portieri</button>
+                    <button class="stat-pill" onclick="setPlayerStatCat('ratings', this)">⭐ Rating Medio</button>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <select class="stats-select" id="player-team-filter" onchange="renderPlayerStatsTable()"><option value="all">Tutte le Squadre (20)</option></select>
+                    <input type="text" class="stats-search-input" id="player-search-input" placeholder="Cerca giocatore..." oninput="renderPlayerStatsTable()">
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-header-bar">
+                    <div>
+                        <strong style="font-size:1.05rem;" id="player-stats-title">📊 Statistiche Giocatori Serie A 2026/2027 — Goal</strong>
+                        <div style="font-size:0.74rem; color:var(--text-muted);" id="player-stats-sub">Auto-sync rose Serie A + baseline Opta</div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="pro-table"><thead id="player-stats-thead"></thead><tbody id="player-stats-tbody"></tbody></table>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const FORMATIONS = {
-            "4-3-3": [[9.5,50,160,340],[26,84,540,600,400,600],[22,62,320,425],[22,38,310,255],[26,16,620,100,450,95],[48,72,760,400,630,480],[40,50,475,340],[48,28,660,250,580,210],[72,82,830,450,780,540],[80,50,900,340],[72,18,830,240,780,160]],
-            "3-5-2": [[9.5,50,160,340],[25,72,420,540],[23,50,320,340],[25,28,480,175,360,185],[46,86,760,590],[52,64,750,430,640,520],[40,50,470,340],[52,36,680,260],[46,14,760,88],[74,58,640,460],[78,40,890,270,830,310]],
-            "3-4-2-1": [[9.5,50,160,340],[26,72,410,550],[23,50,320,340],[26,28,400,185],[48,86,760,590],[46,62,690,460,580,500],[44,38,520,260],[48,14,760,90],[68,64,800,410,740,490],[68,36,800,280,740,220],[80,50,900,340]],
-            "4-2-3-1": [[9.5,50,160,340],[26,84,600,600],[22,62,320,425],[22,38,310,255],[26,16,470,190,380,150],[42,64,540,430],[42,36,520,250],[68,82,810,440,740,530],[63,50,750,340,680,360],[68,18,810,250,740,190],[80,50,900,340]],
-            "4-3-2-1": [[9.5,50,160,340],[26,84,520,600],[22,62,320,425],[22,38,310,255],[26,16,520,120],[46,70,640,480],[42,50,490,340],[46,30,640,240],[68,64,790,400,740,470],[68,36,800,280,740,240],[80,50,900,340]],
-            "3-5-1-1": [[9.5,50,160,340],[25,72,410,550],[23,50,320,340],[25,28,390,190],[46,86,750,590],[41,50,480,340],[53,64,720,430,620,500],[51,36,760,280,650,300],[46,14,750,90],[69,34,820,240,770,260],[80,52,900,340]]
-        };
 
-        const LOGOS = {
-            lazio:"https://media.api-sports.io/football/teams/487.png", inter:"https://media.api-sports.io/football/teams/505.png",
-            roma:"https://media.api-sports.io/football/teams/497.png", milan:"https://media.api-sports.io/football/teams/489.png",
-            como:"https://media.api-sports.io/football/teams/895.png", frosinone:"https://media.api-sports.io/football/teams/512.png",
-            juventus:"https://media.api-sports.io/football/teams/496.png", bologna:"https://media.api-sports.io/football/teams/500.png",
-            cagliari:"https://media.api-sports.io/football/teams/490.png", napoli:"https://media.api-sports.io/football/teams/492.png",
-            torino:"https://media.api-sports.io/football/teams/503.png", atalanta:"https://media.api-sports.io/football/teams/499.png",
-            genoa:"https://media.api-sports.io/football/teams/495.png", lecce:"https://media.api-sports.io/football/teams/867.png",
-            fiorentina:"https://media.api-sports.io/football/teams/502.png", parma:"https://media.api-sports.io/football/teams/523.png",
-            sassuolo:"https://media.api-sports.io/football/teams/488.png", monza:"https://media.api-sports.io/football/teams/1579.png",
-            venezia:"https://media.api-sports.io/football/teams/517.png", udinese:"https://media.api-sports.io/football/teams/494.png",
-            alhilal:"https://media.api-sports.io/football/teams/2932.png"
-        };
-
-        // DATABASE AGGIORNATO AL 100% DAI TUOI SCREENSHOT UFFICIALI
-        const database = {
-            gattuso: {
-                nome:"Gennaro Gattuso", cat:"serie_a", team:"S.S. Lazio", key:"lazio", color:"#38bdf8", mod:"4-3-3", espnAliases:["lazio"],
-                stileTag:"Gegenpressing & Morso Alto", fil:"Aggressione feroce, trappole laterali e inserimenti ciechi",
-                essay:"Gattuso ha costruito una macchina da guerra verticale e rabbiosa. La Lazio lascia volutamente il passaggio verso il terzino avversario per far scattare la 'Pressing Trap' sulla linea laterale. In possesso gioca asimmetrico: Nuno Tavares attacca come un'ala pura a sinistra mentre Floriani Mussolini stringe dietro formando una linea a 3 preventiva.",
-                forza:"Intensità di pressing feroce, strappi di Tavares, tagli di Frattesi e classe di Zaccagni.", debole:"Spazi alle spalle della difesa contro palle lunghe sul lato di Tavares.",
-                metrics:{Possesso:56, Pressing:94, Verticalita:88, Ampiezza:85},
-                fasi:[["Costruzione 2+3 Asimmetrica","Šutalo e Provstgaard scaricano veloce su Belahyane. Tavares vola a sinistra, Floriani Mussolini resta bloccato."],["Sviluppo (Catena Mancina)","Tavares-Taylor-Zaccagni attirano gli avversari aprendo l'area al taglio cieco di Frattesi."],["Non Possesso (Pressing Trap)","Aggressione entro i primi 35m chiudendo a tenaglia il terzino rivale."],["Transizioni Fulminee","Lancio immediato per Zaccagni/Isaksen nell'1vs1."]],
-                sp:[["Zaccagni","Taylor K.","Pinamonti"],["Zaccagni","Cataldi"],["Zaccagni","Taylor K.","Rovella"]],
-                ball:[[55,"Belahyane","Rovella",45,6],[55,"Sutalo J.","Doekhi",45,2],[55,"Isaksen","Cancellieri",45,8],[55,"Floriani Mussolini","Marusic",45,1],[51,"Noslin","Pinamonti",49,9]],
-                xi:[
-                    [35,"C. Mandas","Portiere Reattivo","Uscite fuori porta da libero aggiunto.","Accorcia alle spalle dei centrali alti."],
-                    [15,"Floriani Mussolini","Terzino Bloccato","Equilibrio difensivo per creare linea a 3.","Stringe al centro sulle salite a sinistra."],
-                    [2,"Sutalo J.","Centrale d'Anticipo","Anticipo ruvido sulla punta spalle alla porta.","Rompe la linea di 10m in avanti."],
-                    [25,"Provstgaard","Centrale Fisico","Dominio aereo e guida del fuorigioco.","Mantiene distanze cortissime."],
-                    [17,"N. Tavares","Terzino Freccia","Spinta devastante fino al fondo campo.","Falcata di 50m da ala pura."],
-                    [16,"D. Frattesi","Mezzala d'Assalto","Inserimenti a fari spenti in area di rigore.","Taglio diagonale sul lato cieco dei centrali."],
-                    [21,"Belahyane","Regista / Schermo","Interdizione e scarico a 1-2 tocchi.","Pendolo continuo davanti alla difesa."],
-                    [24,"Taylor K.","Mezzala Tecnica","Raccordo nello stretto e tiri da fuori.","Triangola tra le linee con Zaccagni."],
-                    [11,"Isaksen","Ala Elettrica","1vs1 secco e rientro sul mancino.","Taglio verso l'area per calciare a giro."],
-                    [14,"Noslin","Centravanti Mobile","Pressing continuo sul centrale e sponde.","Porta via i centrali aprendo varchi."],
-                    [10,"Zaccagni","Capitano / Leader","Punta l'uomo, rientra a giro e calcia rigori.","Inventa e rifinisce sul lato sinistro."]
-                ]
-            },
-            chivu: {
-                nome:"Cristian Chivu", cat:"serie_a", team:"Inter", key:"inter", color:"#3b82f6", mod:"3-5-2", espnAliases:["inter","internazionale"],
-                stileTag:"Relazionale Fluido Europeo", fil:"3-5-2 mobile con braccetti d'attacco, Diouf a destra e ritmo Premier",
-                essay:"Chivu ha reso il 3-5-2 ancora più verticale e muscolare. Mantiene le rotazioni fluide (Bastoni che sale a fare il rifinitore sinistro e Dimarco che crossa), ma con Bisseck a destra e l'esplosività di Diouf ha alzato il ritmo del pressing e la pericolosità in transizione.",
-                forza:"Rotazioni impossibili da marcare, profondità della rosa (Jones C., Spence, Stones), palle inattive.", debole:"Contropiedi sul lato scoperto quando entrambi i braccetti salgono.",
-                metrics:{Possesso:78, Pressing:84, Verticalita:80, Ampiezza:88},
-                fasi:[["Costruzione 3+1","Akanji comanda da dietro, Bastoni e Bisseck si aprono larghi mentre Çalhanoğlu abbassa la posizione."],["Sviluppo nei Mezzi Spazi","Catena sinistra Bastoni-Zieliński-Dimarco fine, gamba pura a destra con Diouf e Barella."],["Non Possesso (5-3-2 Corto)","Squadra compatta in 25m con pressing sulla trequarti rivale."],["Transizioni","Scarico immediato su Lautaro per lanciare Thuram/Esposito."]],
-                sp:[["Calhanoglu","Zielinski","Martinez L."],["Dimarco","Calhanoglu"],["Calhanoglu","Dimarco","Zielinski"]],
-                ball:[[51,"Diouf","Spence",49,4],[51,"Bisseck","Stones",49,1],[51,"Zielinski","Jones C.",49,7]],
-                xi:[
-                    [1,"J. Martínez","Portiere Costruttore","Gioco coi piedi sereno sotto pressing.","Invita gli attaccanti prima di imbucare."],
-                    [31,"Bisseck","Braccetto di Spinta","Strapotere fisico palla al piede.","Percussione verticale che spacca le linee."],
-                    [25,"Akanji","Centrale 1vs1","Velocità a campo aperto e anticipo.","Perno di chiusura difensiva centrale."],
-                    [95,"Bastoni","Braccetto Regista","Cross e passaggi chiave da numero 10.","Sale sulla trequarti sinistra a rifinire."],
-                    [17,"Diouf","Quinto Destro","4 assist in campionato e strappi continui.","Allunga la difesa fino al fondo."],
-                    [23,"Barella","Mezzala Box-to-Box","Polmoni, inserimenti e coperture.","Scala dietro quando Bisseck sale."],
-                    [20,"Calhanoglu","Regista Metronomo","1° rigorista, sventagliate e tiri da fuori.","Detta i tempi di tutta la manovra."],
-                    [7,"Zielinski","Mezzala Tecnica","Dribbling stretto, punizioni e ultimo tocco.","Combina a triangolo con Dimarco."],
-                    [32,"Dimarco","Quinto Crossatore","Ampiezza totale e punizioni al bacio.","Chiude sul 2° palo o crossa di prima."],
-                    [10,"Martinez L.","Punta Raccordo","Cuce gioco tra le linee e segna di rapina.","Viene incontro liberando spazio."],
-                    [9,"Thuram","Punta Profondità","Allunga i centrali con scatti fulminei.","Taglio alle spalle della linea difensiva."]
-                ]
-            },
-            gasperini: {
-                nome:"Gian Piero Gasperini", cat:"serie_a", team:"AS Roma", key:"roma", color:"#ef4444", mod:"3-4-2-1", espnAliases:["roma"],
-                stileTag:"Uomo su Uomo Totale", fil:"Duelli individuali a tutto campo, quinti d'attacco e ritmo feroce",
-                essay:"Gasperini ha trasformato la Roma nel miglior attacco del campionato applicando duelli fisici individuali in ogni zona. Difesa altissima con Mancini e N'Dicka aggressivi, fasce devastanti (Molina e Wesley) e trequartisti liberi dietro alla velocità fulminea di Donyell Malen.",
-                forza:"Volume offensivo devastante (31 gol!), strapotere fisico nei duelli 1vs1.", debole:"Vulnerabilità alle spalle dei centrali se i tre davanti non schermano.",
-                metrics:{Possesso:66, Pressing:96, Verticalita:90, Ampiezza:92},
-                fasi:[["Costruzione Aggressiva","I centrali verticalizzano subito su Dybala/Soulé o scavalcano per Malen."],["Catene Esterne","Molina a destra e Wesley a sinistra schiacciano i terzini rivali."],["Non Possesso Uomo-su-Uomo","Ogni giallorosso segue il proprio avversario a tutto campo."],["Transizioni Fameliche","Palla recuperata = attacco in 5 secondi con 6 uomini in area."]],
-                sp:[["Malen","Dybala","Soulè"],["Dybala","Soulè"],["Dybala","Soulè","Wesley"]],
-                ball:[[51,"Soulè","Mora",49,8],[51,"Molina N.","Lulli",49,4],[51,"N'Dicka","Balerdi",49,2]],
-                xi:[
-                    [99,"Svilar","Portiere Libero","Uscite coraggiose fuori dall'area.","Copre la profondità della difesa altissima."],
-                    [23,"Mancini","Braccetto d'Attacco","Anticipo feroce e salite in mediana.","Rompe la linea per creare superiorità."],
-                    [5,"N'Dicka","Centrale Dominante","Marcatura asfissiante sulla punta.","Non concede un metro per girarsi."],
-                    [22,"Hermoso","Braccetto Costruttore","Lanci diagonali e palleggio mancino.","Sale a supportare Wesley a sinistra."],
-                    [16,"Molina N.","Quinto Destro","Corsa inesauribile e cross tesi.","Sovraccarica l'area sul palo lontano."],
-                    [17,"Koné M.","Dinamo Box-to-Box","Strappi palla al piede e contrasti.","Spacca il centrocampo rivale in corsa."],
-                    [4,"Cristante","Equilibratore","Coperture preventive e palle alte.","Protegge le sortite di Mancini."],
-                    [12,"Wesley","Quinto Esplosivo","Dribbling 1vs1 e 3 assist.","Punta l'uomo sul lato corto dell'area."],
-                    [18,"Soulè","Trequartista Destro","Converge sul mancino per tirare o imbucare.","Libera la corsia per Molina."],
-                    [21,"Dybala","Genio Libero","Inventa nello stretto, angoli e punizioni.","Galleggia in Zona 14 per lanciare Malen."],
-                    [14,"Malen","Centravanti Freccia","1° rigorista, velocità e 8 gol.","Attacca lo spazio sul filo del fuorigioco."]
-                ]
-            },
-            amorim: {
-                nome:"Rúben Amorim", cat:"serie_a", team:"AC Milan", key:"milan", color:"#dc2626", mod:"3-4-2-1", espnAliases:["milan"],
-                stileTag:"3-4-2-1 Posizionale", fil:"Costruzione 3+2 paziente, due 10 stretti e riaggressione immediata",
-                essay:"Amorim ha impiantato il suo celebre 3-4-2-1 a Milano unendo l'ordine posizionale alla classe di Luka Modrić. Maignan funge da terzo costruttore, mentre Pulisic e Cissè giocano strettissimi nei mezzi spazi attorno a Gonçalo Ramos.",
-                forza:"Equilibrio difensivo, qualità nella gestione di Modrić, inserimenti di Rabiot/Cissè.", debole:"Soffre se gli avversari bloccano le linee verso i due trequartisti.",
-                metrics:{Possesso:74, Pressing:85, Verticalita:76, Ampiezza:84},
-                fasi:[["Costruzione 3+2","Maignan attira la pressione; Modrić e Rabiot offrono doppio scarico pulito."],["Mezzi Spazi","Pulisic e Cissè giocano stretti per dialogare con Gonçalo Ramos."],["Blocco 5-2-3","I quinti arretrano rapidamente chiudendo le fasce."],["Contro-pressing","Riconquista nei primi 4 secondi guidata da Ramos."]],
-                sp:[["Ramos G.","Pulisic","Modric"],["Modric","Pulisic"],["Modric","Pulisic","Bartesaghi"]],
-                ball:[[51,"Cissè A.","Musah",49,9],[55,"De Winter","Gabbia",45,2],[55,"Modric","Musah",45,6]],
-                xi:[
-                    [16,"Maignan","Portiere Regista","Primo costruttore coi piedi.","Si alza da centrale arretrato."],
-                    [34,"Gila","Braccetto Destro","Velocità nei recuperi in campo aperto.","Copre alle spalle dell'esterno."],
-                    [5,"De Winter","Centrale Posizionale","Letture preventive e guida reparto.","Chiama il fuorigioco compatto."],
-                    [31,"Pavlovic","Braccetto Fisico","Impatto nei contrasti e dominio aereo.","Rompe la linea per anticipare."],
-                    [56,"Bartesaghi","Quinto / Esterno","Spinta costante e calci d'angolo.","Ampiezza sulla corsia."],
-                    [25,"Rabiot","Mediano / Incursore","5 gol e 4 assist: dominante.","Attacca l'area a fari spenti."],
-                    [14,"Modric","Maestro di Regia","Punizioni, angoli e geometrie divine.","Detta il ritmo della squadra."],
-                    [17,"Moreira","Quinto Esplosivo","Dribbling secco 1vs1 e 4 gol.","Punta l'uomo e va al cross."],
-                    [11,"Pulisic","Trequartista Destro","Rifinitura, rigori e cinismo sotto porta.","Taglia dentro sul piede forte."],
-                    [73,"Cissè A.","Trequartista Sorpresa","Fame, velocità e 5 gol segnati.","S'inserisce tra centrale e terzino."],
-                    [9,"Ramos G.","Centravanti Completo","1° rigorista, pressing e 1° palo.","Attacca l'area con ferocia."]
-                ]
-            },
-            fabregas: {
-                nome:"Cesc Fàbregas", cat:"serie_a", team:"Como 1907", key:"como", color:"#0ea5e9", mod:"4-2-3-1", espnAliases:["como"],
-                stileTag:"Tiki-Taka Posizionale", fil:"Dominio assoluto del pallone, terzini invertiti e calcio spettacolare",
-                essay:"Il Como di Fàbregas gioca il calcio di posizione più puro d'Italia. Valle stringe dentro a fare il mediano vicino a Milla/Da Cunha creando un rombo centrale, liberando il genio di Nico Paz e le frecce Baturina e Assane Diao dietro a Douvikas/Kean.",
-                forza:"Possesso palla asfissiante, qualità tecnica pazzesca di Nico Paz, coppia Douvikas-Kean.", debole:"Rischi nelle uscite basse contro pressing a uomo fisici.",
-                metrics:{Possesso:88, Pressing:86, Verticalita:72, Ampiezza:80},
-                fasi:[["Uscita Dezerbiana","Butez aspetta l'attaccante fino all'ultimo per scaricare sul perno."],["Terzino Invertito","Valle/Kaiki accentrano creando superiorità 4vs3 in mezzo."],["La Magia sulla Trequarti","Nico Paz riceve in Zona 14 imbucando Diao e Baturina."],["Riaggressione","Gegenpressing furioso appena si perde la sfera."]],
-                sp:[["Da Cunha","Kean","Douvikas"],["Paz N.","Milla"],["Paz N.","Milla","Da Cunha"]],
-                ball:[[51,"Milla","Perrone",49,5],[55,"Couto","Smolcic I.",45,1],[55,"Valle","Kaiki",45,4],[51,"Da Cunha","Perrone",49,6],[51,"Douvikas","Kean",49,10],[51,"Butez","Sanchez Ro.",49,0]],
-                xi:[
-                    [1,"Butez","Portiere Costruttore","Calma olimpica palla al piede.","Fa da esca per attirare il pressing."],
-                    [27,"Couto","Terzino d'Assalto","Sovrapposizioni continue fino al fondo.","Ampiezza totale sulla fascia destra."],
-                    [4,"Ramon J.","Centrale d'Impostazione","Filtranti rasoterra precisi.","Rompe la prima linea in conduzione."],
-                    [2,"Kempf","Centrale Marcatore","Duelli aerei e chiusura profondità.","Equilibrio alle salite dei compagni."],
-                    [3,"Valle","Terzino Invertito","Gioca da mediano aggiunto in possesso.","Crea superiorità nel cuore del campo."],
-                    [5,"Milla","Regista Metronomo","Tocco a un tempo, punizioni e angoli.","Orienta tutta la circolazione lariana."],
-                    [7,"Da Cunha","Mediano Dinamico","1° rigorista, equilibrio e inserimenti.","Scambia posizione con Nico Paz."],
-                    [38,"Diao A.","Ala Esplosiva Destra","Strappi atletici e dribbling fulmineo.","Taglia in diagonale verso la porta."],
-                    [10,"Paz N.","Il 10 Totale","Visione divina, punizioni e tiri da fuori.","Domina la Zona 14."],
-                    [20,"Baturina","Trequartista Rifinitore","Dribbling stretto e ultimo tocco.","Triangola sul 2° palo."],
-                    [9,"Douvikas","Centravanti Mobile","Movimenti continui e 5 gol segnati.","Attacca la profondità sui tagli."]
-                ]
-            },
-            alvini: {
-                nome:"Massimiliano Alvini", cat:"serie_a", team:"Frosinone", key:"frosinone", color:"#eab308", mod:"4-2-3-1", espnAliases:["frosinone"],
-                stileTag:"Pressing Selvaggio & Verticalità", fil:"Ritmo indiavolato, regia di Calò e trio Ghedjemis-Schmid-Kvernadze",
-                essay:"Alvini ha costruito una squadra spregiudicata che aggredisce chiunque fin dentro l'area avversaria. Calò smista e calcia piazzati perfetti, mentre Ghedjemis, Schmid e Kvernadze sfornano assist a raffica dietro a Bobcek/Raimondo.",
-                forza:"Produzione offensiva spaventosa (12 assist dal trio di trequartisti), fame agonistica.", debole:"Difesa esposta quando il primo pressing viene saltato.",
-                metrics:{Possesso:48, Pressing:95, Verticalita:94, Ampiezza:82},
-                fasi:[["Pressing a Tutto Campo","Bobcek/Raimondo e Schmid mordono subito i centrali rivali."],["Verticalizzazione di Calò","Calò verticalizza in 2 secondi per le ali."],["Tridente di Rifinitura","Schmid inventa tra le linee mentre le ali bruciano le fasce."],["Transizioni Letali","4 giocatori attaccano la porta contemporaneamente."]],
-                sp:[["Schmid","Calò","Bobcek"],["Calò","Ghedjemis"],["Calò","Kvernadze","Ghedjemis"]],
-                ball:[[51,"Oyono A.","Tchato",49,1],[51,"Cittadini","Monterisi",49,3]],
-                xi:[
-                    [1,"Palmisani","Portiere Reattivo","Sicurezza tra i pali e rilanci veloci.","Guida la difesa alta ciociara."],
-                    [20,"Oyono A.","Terzino Freccia","Accelerazioni mostruose a destra.","Spinta continua sul binario."],
-                    [5,"Calvani","Centrale Aggressivo","Anticipo secco sull'attaccante.","Rompe la linea senza paura."],
-                    [30,"Cittadini","Centrale Roccioso","Duelli aerei e letture difensive.","Comanda il reparto arretrato."],
-                    [25,"Bracaglia","Terzino Sinistro","Chiusure puntuali e cross tesi.","Accompagna Kvernadze."],
-                    [14,"Calò","Regista / Cecchino","Lanci millimetrici, angoli e 5 gol.","Perno di ogni ripartenza."],
-                    [8,"Masini","Mediano Box-to-Box","Polmoni d'acciaio e recuperi.","Morde su tutto il centrocampo."],
-                    [7,"Ghedjemis","Ala Destra Fulminea","Dribbling elettrico e 4 assist.","Converge sul mancino verso l'area."],
-                    [10,"Schmid","Trequartista Cervello","1° rigorista e 4 assist.","Rifinitore puro nella Zona 14."],
-                    [17,"Kvernadze","Ala Sinistra","Strappi in campo aperto e 4 assist.","Taglio diagonale verso la porta."],
-                    [9,"Bobcek","Centravanti (Raimondo 8 gol)","Attacco continuo dello spazio.","Pressa senza tregua i difensori."]
-                ]
-            },
-            spalletti: {
-                nome:"Luciano Spalletti", cat:"serie_a", team:"Juventus", key:"juventus", color:"#e2e8f0", mod:"4-3-3", espnAliases:["juventus"],
-                stileTag:"Calcio Relazionale & Occupazione", fil:"Ballottaggio Celik-Cambiaso, regia Douglas Luiz-Locatelli e coppia Kolo Muani-Woltemade",
-                essay:"Spalletti guida la Juventus con il suo calcio relazionale fatto di interscambi continui. Grande abbondanza sulle fasce (Celik-Cambiaso), fisicità a centrocampo con Sarr P., Douglas Luiz e Locatelli, e l'estro di Conceição/Alajbegović e Yildiz attorno a Kolo Muani.",
-                forza:"Solidità di Bremer-Lucumí, imprevedibilità di Yildiz e Kolo Muani, qualità su palle inattive.", debole:"Ancora alla ricerca della piena continuità realizzativa.",
-                metrics:{Possesso:75, Pressing:80, Verticalita:76, Ampiezza:82},
-                fasi:[["Uscita 3+2","Celik/Cambiaso stringe vicino a Douglas Luiz creando ragnatela di passaggi."],["Catena Sinistra","Scambi continui tra Cambiaso, Sarr e Kenan Yildiz."],["Non Possesso 4-4-2","Locatelli e Sarr schermano centralmente lasciando Yildiz libero."],["Attacco Profondità","Lanci diretti verso lo scatto di Kolo Muani."]],
-                sp:[["Kolo Muani","Woltemade","Locatelli"],["Yildiz","Douglas Luiz"],["Yildiz","Cambiaso","Locatelli"]],
-                ball:[[51,"Celik","Cambiaso",49,4],[51,"Conceicao","Alajbegovic",49,8],[51,"Kolo Muani","Woltemade",49,9],[51,"Sarr P.","Gonzalez N.",49,5]],
-                xi:[
-                    [25,"Vicario","Portiere Costruttore","Riflessi felini e uscite pulite.","Guida la difesa alta."],
-                    [15,"Kalulu","Terzino Bloccato","Velocità di recupero difensivo.","Scala da terzo centrale."],
-                    [3,"Bremer","Colosso Centrale","Dominio fisico e gol pesanti.","Anticipo duro sull'attaccante."],
-                    [26,"Lucumí","Centrale Sinistro","Uscite palla al piede e velocità.","Difende a campo aperto."],
-                    [19,"Celik","Terzino Sinistro/Destro","Equilibrio difensivo e sovrapposizioni.","Jolly tattico sulle fasce."],
-                    [29,"Sarr P.","Mezzala Box-to-Box","Corsa, fisicità e inserimenti.","Attacca gli spazi a destra."],
-                    [12,"Douglas Luiz","Regista / Play","Palleggio sotto pressione e punizioni.","Detta i tempi d'uscita."],
-                    [5,"Locatelli","Mezzala / Metronomo","Ordine, angoli e rigori.","Cerca la conclusione dal limite."],
-                    [7,"Conceicao","Ala Elettrica Destra","Dribbling fulmineo e cross tagliati.","Punta l'uomo nell'1vs1."],
-                    [9,"Kolo Muani","Centravanti Freccia","1° rigorista e scatti brucianti.","Allunga le difese rivali."],
-                    [10,"Yildiz","Il 10 / Ala Sinistra","Punizioni, angoli e tiri a giro.","Converge dentro al campo."]
-                ]
-            },
-            palladino: {
-                nome:"Raffaele Palladino", cat:"serie_a", team:"Bologna", key:"bologna", color:"#b91c1c", mod:"3-4-2-1", espnAliases:["bologna"],
-                stileTag:"3-4-2-1 Intenso & Riferimenti", fil:"La svolta dopo Tedesco: blocco a 3 solido, Pobega/Moro e attacco Piccoli-Orsolini",
-                essay:"Subentrato a Tedesco dopo 4 giornate difficili, Palladino ha portato subito 4 vittorie di fila blindando la difesa col 3-4-2-1. Pobega e Ferguson agiscono da motori totali mentre Miranda (5 assist!) crossa per Piccoli/Odgaard e Orsolini.",
-                forza:"Solidità ritrovata, cross di Miranda, pericolosità di Orsolini e Piccoli.", debole:"Può soffrire l'ampiezza se i quinti restano schiacciati.",
-                metrics:{Possesso:60, Pressing:82, Verticalita:82, Ampiezza:86},
-                fasi:[["Uscita a 3 Fluida","Theate e Vitík portano palla lateralmente cercando i quinti."],["Motori Centrali","Pobega e Ferguson alternano interdizione e inserimenti."],["Blocco 5-4-1","Compattezza davanti a Skorupski per ripartire veloce."],["Rifinitura Rapida","Orsolini e Cambiaghi attaccano dentro l'area."]],
-                sp:[["Orsolini","Dovbyk","Bernardeschi"],["Orsolini","Bernardeschi"],["Orsolini","Bernardeschi","Ferguson"]],
-                ball:[[51,"Piccoli","Odgaard",49,10],[51,"Orsolini","Bernardeschi",49,8],[51,"Cambiaghi","Mbangula",49,9],[51,"Pobega","Moro N.",49,5]],
-                xi:[
-                    [1,"Skorupski","Portiere Reattivo","Sicurezza tra i pali e uscite.","Dirige la difesa a tre."],
-                    [41,"Vitík","Braccetto Destro","Anticipi secchi e duelli fisici.","Copre alle spalle di Zortea."],
-                    [15,"Casale","Centrale Perno","Senso della posizione e marcature.","Comanda il centro dell'area."],
-                    [5,"Theate","Braccetto Sinistro","Qualità mancina in uscita.","Accompagna Miranda."],
-                    [21,"Zortea","Quinto di Spinta","Corsa continua e cross tesi.","Allunga il campo a destra."],
-                    [18,"Pobega","Mezzala Rinata","Inserimenti pesanti e contrasti.","Strappa in avanti con ferocia."],
-                    [19,"Ferguson","Capitano Box-to-Box","Pressione alta e calci d'angolo.","Attacca l'area dietro alla punta."],
-                    [33,"Miranda","Quinto Assistman (5)","Piede mancino magico sui cross.","Pennella per gli attaccanti."],
-                    [7,"Orsolini","Stella / Trequartista","1° rigorista, punizioni e tiro a giro.","Converge dentro sul mancino."],
-                    [28,"Cambiaghi","Trequartista Rapido","Accelerazioni nello stretto.","Punta i difensori centrali."],
-                    [91,"Piccoli","Centravanti Potenza","Lotta fisica e sponde aeree.","Apre spazi per Ferguson."]
-                ]
-            },
-            pisacane: {
-                nome:"Fabio Pisacane", cat:"serie_a", team:"Cagliari", key:"cagliari", color:"#1d4ed8", mod:"4-3-2-1", espnAliases:["cagliari"],
-                stileTag:"Albero di Natale Compatto", fil:"Difesa solida con Caprile e Mina, centrocampo Deiola-Winks e fantasia Maldini",
-                essay:"Al debutto in Serie A Pisacane sta sorprendendo tutti col suo 4-3-2-1 compatto: l'esperienza di Harry Winks e Deiola dà calma ed equilibrio, Yerry Mina blinda l'area e Daniel Maldini (5 gol!) ha licenza totale di inventare dietro a Mendy/Nzola.",
-                forza:"Organizzazione difensiva, parate di Caprile, qualità balistica di Maldini.", debole:"Basso volume realizzativo contro difese molto chiuse.",
-                metrics:{Possesso:52, Pressing:74, Verticalita:78, Ampiezza:68},
-                fasi:[["Uscita Ordinata","Winks si abbassa tra Mina e Kofler per pulire la prima palla."],["Densità Centrale","Deiola, Winks e Adopo chiudono gli spazi interni."],["Innesco di Maldini","Palla tra le linee su Daniel Maldini per tiri o filtranti."],["Ripartenza Verticale","Appoggio rapido su Mendy/Nzola."]],
-                sp:[["Maldini","Fazzini","Deiola"],["Fazzini","Maldini"],["Fazzini","Obert","Maldini"]],
-                ball:[[51,"Mendy P.","Nzola",49,10],[51,"Deiola","Fazzini",49,8]],
-                xi:[
-                    [1,"Caprile","Portiere Para-Tutto","Miracoli decisivi tra i pali.","Comanda la linea a 4."],
-                    [2,"Zé Pedro","Terzino Solido","Chiusure puntuali a destra.","Equilibrio difensivo."],
-                    [26,"Mina","Colosso / Leader","Dominio fisico e leadership vocale.","Annulla i centravanti rivali."],
-                    [5,"Kofler","Centrale Giovane","Velocità e anticipi puliti.","Copre la profondità."],
-                    [33,"Obert","Terzino Sinistro","Palleggio sicuro e calci d'angolo.","Protegge la corsia mancina."],
-                    [8,"Adopo","Mezzala Muscolare","Recuperi continui e assist.","Morde il centrocampo rivale."],
-                    [20,"Winks","Regista Inglese","Precisione chirurgica nei passaggi.","Detta tempi e geometrie."],
-                    [14,"Romano","Mezzala Dinamica","Corsa e raccordo offensivo.","Supporta i due trequartisti."],
-                    [14,"Deiola","Incursore / Capitano","Inserimenti aerei e rigori.","Attacca l'area sul lato destro."],
-                    [10,"Maldini","Stella (5 Gol!)","1° rigorista e genio balistico.","Inventa nella Zona 14."],
-                    [9,"Mendy P.","Centravanti Fisico","Sponde aeree e lotta.","Lotta contro i due centrali."]
-                ]
-            },
-            allegri: {
-                nome:"Massimiliano Allegri", cat:"serie_a", team:"Napoli", key:"napoli", color:"#0284c7", mod:"3-5-1-1", espnAliases:["napoli"],
-                stileTag:"Pragmatismo & Regia De Bruyne", fil:"Corto muso moderno: Meret favorito su Milinkovic, Politano a destra, genio KDB per Højlund",
-                essay:"Alla guida del Napoli, Allegri punta su equilibrio difensivo e colpi di classe pura. Davanti a Meret e alla linea a 3 con Beukema, Rrahmani e Marin R., Gilmour fa girare palla per liberare Kevin De Bruyne, pronto a mandare in porta Højlund e Alisson Santos.",
-                forza:"Qualità balistica di De Bruyne, potenza di Højlund e McTominay, affidabilità di Politano.", debole:"Manovra lenta quando gli avversari chiudono le linee su De Bruyne.",
-                metrics:{Possesso:58, Pressing:68, Verticalita:84, Ampiezza:76},
-                fasi:[["Blocco Basso di Granito","Difesa compatta a 5 in non possesso."],["Uscita su Gilmour e KDB","Palla veloce su Gilmour che appoggia su De Bruyne."],["Rimpallo su McTominay","McTominay attacca l'area da seconda punta."],["Transizione Su Højlund","Verticalizzazioni immediate per lo scatto di Højlund."]],
-                sp:[["De Bruyne","Hojlund","Politano"],["De Bruyne","Politano"],["De Bruyne","Politano","Neres"]],
-                ball:[[55,"Politano","Neres",45,4],[60,"Meret","Milinkovic-Savic V.",40,0],[51,"Marin R.","Badiashile",49,3],[51,"Santos A.","Vergara",49,9]],
-                xi:[
-                    [1,"Meret","Portiere Titolare","Reattività felina tra i pali.","Comanda la difesa a tre."],
-                    [31,"Beukema","Braccetto Destro","Anticipi duri e impostazione.","Copre a destra."],
-                    [13,"Rrahmani","Centrale Marcatore","Senso della posizione e chiusure.","Perno centrale difensivo."],
-                    [16,"Marin R.","Braccetto Sinistro","Fisicità nei duelli aerei.","Protegge alle spalle di Olivera."],
-                    [21,"Politano","Quinto / Ala Destra","1° cambio palle inattive e 3 assist.","Allunga il campo a destra."],
-                    [6,"Gilmour","Regista Basso","Tocco rapido sotto pressing.","Schermo davanti alla difesa."],
-                    [17,"De Bruyne","Regista Avanzato","1° rigorista, punizioni e angoli.","Arma il destro per Højlund."],
-                    [8,"McTominay","Incursore Box-to-Box","Inserimenti aerei e gol pesanti.","Si butta in area sui cross."],
-                    [17,"Olivera","Quinto Sinistro","Solidità e sovrapposizioni.","Spinta controllata a sinistra."],
-                    [7,"Santos A.","Seconda Punta","Dribbling stretto e strappi veloci.","Punta l'uomo da sinistra."],
-                    [19,"Hojlund","Centravanti Freccia","Velocità folle e potenza.","Attacca la profondità sul filo."]
-                ]
-            },
-            abate: {
-                nome:"Ignazio Abate", cat:"serie_a", team:"Torino", key:"torino", color:"#991b1b", mod:"3-5-2", espnAliases:["torino"],
-                stileTag:"Propositivo & Intensità Giovane", fil:"Difesa Comuzzo-Rodriguez-Coco, regia Fitz-Jim/Mandragora e coppia Kulenovic-Zapata/Adams",
-                essay:"Abate ha portato idee moderne al Torino: difesa a tre aggressiva guidata da Comuzzo e Rodriguez R., un centrocampo tecnico con Fitz-Jim, Mandragora e il faro Vlašić, e potenza offensiva con Kulenović e Ché Adams/Zapata.",
-                forza:"Intensità nei duelli, qualità sui piazzati di Vlašić e Mandragora, peso in area.", debole:"Disattenzioni sui cross sul secondo palo.",
-                metrics:{Possesso:60, Pressing:82, Verticalita:78, Ampiezza:80},
-                fasi:[["Uscita Palla a Terra","Fitz-Jim riceve dai 3 centrali costruendo corto."],["Spinta di Belghali","Belghali garantisce ampiezza a destra servendo assist."],["Pressing di Kulenović","Punta fisica che morde i centrali avversari."],["Scambio Adams-Vlašić","Adams viene incontro aprendo il varco a Vlašić."]],
-                sp:[["Vlasic","Kulenovic","Zapata D."],["Vlasic","Mandragora"],["Vlasic","Fitz-Jim","Mandragora"]],
-                ball:[[51,"Rodriguez R.","Comert",49,3],[51,"Comuzzo","Ismajli",49,2],[51,"Fitz-Jim","Braganca",49,6]],
-                xi:[
-                    [1,"Lucas Perri","Portiere Brasiliano","Reattività esplosiva e rilanci.","Comanda i 3 difensori."],
-                    [23,"Coco","Braccetto Destro","Anticipo duro e fisicità.","Copre le uscite di Belghali."],
-                    [15,"Comuzzo","Centrale Giovane","Intensità e contrasti puliti.","Perno centrale di difesa."],
-                    [13,"Rodriguez R.","Braccetto Esperto","Esperienza, lanci e senso tattico.","Protegge la sinistra."],
-                    [2,"Belghali","Quinto Destro","Spinta continua e 3 assist.","Arma letale sulla fascia."],
-                    [10,"Vlasic","Mezzala Faro","1° rigorista, punizioni e angoli.","Si alza dietro le punte."],
-                    [6,"Fitz-Jim","Regista Olandese","Tecnica nello stretto e angoli.","Fa girare il centrocampo."],
-                    [38,"Mandragora","Mezzala Mancina","Punizioni tagliate e tiro da fuori.","Cuce gioco e conclude."],
-                    [20,"Cacciamani","Quinto Sinistro","Corsa generosa a tutta fascia.","Garantisce ampiezza a sinistra."],
-                    [18,"Ché Adams","Seconda Punta","Mobilità continua e 4 gol.","Gira intorno a Kulenović."],
-                    [9,"Kulenovic","Centravanti Peso (Zapata D.)","Fame agonistica e gioco aereo.","Pressing feroce e attacco d'area."]
-                ]
-            },
-            sarri: {
-                nome:"Maurizio Sarri", cat:"serie_a", team:"Atalanta", key:"atalanta", color:"#1d4ed8", mod:"4-2-3-1", espnAliases:["atalanta"],
-                stileTag:"Sarrismo / Palleggio Corto", fil:"Linea a 4 alta, Kessiè in mediana, Samardžić-CDK-Rowe dietro a Krstović/Scamacca",
-                essay:"Sarri ha abbandonato la difesa a 3 storica della Dea per una linea a 4 altissima guidata da Scalvini. Palleggio rasoterra velocissimo a un tocco tra Éderson, Kessiè/Gaetano e Samardžić per mandare in porta De Ketelaere, Rowe/Raspadori e il bomber Krstović/Scamacca.",
-                forza:"Qualità negli spazi stretti, rigori di Kessiè, vena realizzativa di Krstović.", debole:"Fase difensiva alta ancora in rodaggio (20 gol subiti).",
-                metrics:{Possesso:76, Pressing:80, Verticalita:74, Ampiezza:78},
-                fasi:[["Uscita Sarriana","Triangolazioni veloci rasoterra per uscire sul lato forte."],["Linea a 4 Altissima","Scalvini comanda il movimento sincronizzato del fuorigioco."],["Trio Trequarti","Samardžić, CDK e Rowe convergono in Zona 14."],["Attacco sul 1° Palo","Krstović anticipa sui tagli rasoterra."]],
-                sp:[["Kessiè","Scamacca","Samardzic"],["Samardzic","Gaetano"],["Samardzic","Gaetano","Rowe"]],
-                ball:[[51,"Krstovic","Scamacca",49,10],[51,"Rowe","Raspadori",49,9],[51,"Samardzic","Elmas",49,7],[51,"Bellanova","Zappacosta",49,1],[51,"Kessiè","Gaetano",49,6]],
-                xi:[
-                    [29,"Carnesecchi","Portiere Reattivo","Parate decisive e scarichi corti.","Guida la linea a 4 alta."],
-                    [16,"Bellanova","Terzino Motore","Sovrapposizioni e cross tagliati.","Accompagna le azioni a destra."],
-                    [42,"Scalvini","Centrale Regista","Eleganza e tempi di fuorigioco.","Imposta la manovra da dietro."],
-                    [23,"Kolasinac","Centrale Ruvido","Contrasti durissimi e forza.","Protegge il lato sinistro."],
-                    [3,"Bernasconi","Terzino Sinistro","Palleggio pulito e corsa.","Equilibrio per Rowe."],
-                    [13,"Ederson","Motore Centrocampo","Intensità, strappi e gol.","Domina a tutto campo."],
-                    [79,"Kessiè","Presidente / Mediano","1° rigorista, muscoli e recuperi.","Taglia in area a rimorchio."],
-                    [24,"Samardzic","Ala / Trequartista","Punizioni, angoli e mancino magico.","Stringe verso il centro."],
-                    [17,"De Ketelaere","Trequartista Faro","Visione superiore e 3 assist.","Manda in porta Krstović."],
-                    [11,"Rowe","Ala Sinistra","Velocità, angoli e tiri a rientrare.","Rientra sul destro."],
-                    [90,"Krstovic","Centravanti Killer","Fame mostruosa e 7 gol segnati.","Finalizza ogni pallone sporco."]
-                ]
-            },
-            derossi: {
-                nome:"Daniele De Rossi", cat:"serie_a", team:"Genoa", key:"genoa", color:"#b91c1c", mod:"3-4-2-1", espnAliases:["genoa"],
-                stileTag:"Aggressività & Grinta Marassi", fil:"Sow-Frendrup mastini, Baldanzi/Messias dietro ad Osmajic/Colombo",
-                essay:"De Rossi ha dato al Genoa un'anima feroce. Costruzione solida dietro con Østigård e Vásquez, i mastini Sow e Frendrup a mordere ogni pallone e trequartisti di qualità come Messias, Baldanzi e Vitinha O. dietro ad Osmajić.",
-                forza:"Intensità nei contrasti, punizioni di Baldanzi/Messias, pericolosità di Osmajić.", debole:"Soffre quando gli avversari palleggiano con pazienza.",
-                metrics:{Possesso:49, Pressing:84, Verticalita:85, Ampiezza:78},
-                fasi:[["Uscita Sicura","Bijlow scarica sui 3 centrali che cercano subito i quinti."],["Morsa a Centrocampo","Sow e Frendrup raddoppiano sul portatore rivale."],["Inventiva Trequarti","Vitinha/Baldanzi e Messias combinano nello stretto."],["Palle Inattive","Østigård pericolo mortale sui piazzati."]],
-                sp:[["Colombo","Ostigard","Vitinha O."],["Baldanzi","Messias"],["Mitaj","Baldanzi","Messias"]],
-                ball:[[51,"Osmajic","El Shaarawy",49,10],[55,"Sow","Meichtry",45,6],[60,"Ellertsson","Mitaj",40,7],[51,"Ehizibue","Drameh",49,4]],
-                xi:[
-                    [1,"Bijlow","Portiere Olandese","Uscite coraggiose e piedi educati.","Dirige i tre centrali."],
-                    [22,"Marcandalli","Braccetto Destro","Velocità nei recuperi.","Copre Ehizibue."],
-                    [55,"Ostigard","Centrale Roccioso","Elevazione mostruosa e 2° rigorista.","Muro sui cross avversari."],
-                    [22,"Vasquez","Braccetto Leader","Anticipo duro e aggressività.","Rompe la linea per contrastare."],
-                    [19,"Ehizibue","Quinto Atletico","Gamba e corsa inesauribile.","Spinta continua a destra."],
-                    [32,"Frendrup","Mastino Infallibile","Recuperi seriali e contrasti.","Morde ogni costruttore rivale."],
-                    [8,"Sow","Mediano Dinamico","Intensità e scarichi puliti.","Equilibrio a metà campo."],
-                    [77,"Ellertsson","Quinto Sinistro","Spinta e ripiegamenti generosi.","Cross tesi dal fondo."],
-                    [9,"Vitinha O.","Trequartista","Accelerazioni e rigorista.","Attacca l'area a supporto."],
-                    [10,"Messias","Trequartista (Baldanzi)","Punizioni, angoli e dribbling.","Inventa tra le linee."],
-                    [11,"Osmajic","Centravanti Potenza","Attacco feroce dello spazio e 4 gol.","Scatto bruciante verso la porta."]
-                ]
-            },
-            difrancesco: {
-                nome:"Eusebio Di Francesco", cat:"serie_a", team:"Lecce", key:"lecce", color:"#ca8a04", mod:"4-3-3", espnAliases:["lecce"],
-                stileTag:"4-3-3 Verticale & Ripartenze", fil:"Difesa compatta con Gaspar-Falcone, piazzati di Gallo-Ilic e ballottaggio Geubbels-Stulic",
-                essay:"Di Francesco applica il suo 4-3-3 equilibrato davanti a Falcone e alla coppia Gaspar-Tiago Gabriel per poi scatenare Pierotti/N'Dri e Monteiro J./Fatah attorno al centravanti Geubbels/Štulić.",
-                forza:"Solidità difensiva e parate di Falcone, ripartenze veloci.", debole:"Segna pochissimo (8 gol in 11 gare), bassa finalizzazione.",
-                metrics:{Possesso:46, Pressing:75, Verticalita:86, Ampiezza:84},
-                fasi:[["Blocco Basso","4-5-1 stretto in fase difensiva davanti ai 4."],["Uscite Esterne","Palla veloce a Veiga e Gallo per lanciare le ali."],["1vs1 Fasce","Pierotti e Monteiro puntano sistematicamente il terzino."],["Attacco d'Area","Geubbels/Štulić cerca l'anticipo sul primo palo."]],
-                sp:[["Geubbels","Stulic","Pierotti"],["Gallo","Ilic"],["Gallo","Ilic","Berisha M."]],
-                ball:[[51,"Geubbels","Stulic",49,9],[51,"Gaspar K.","Siebert",49,2],[51,"Monteiro J.","Fatah",49,10],[51,"Pierotti","N'Dri",49,8]],
-                xi:[
-                    [30,"Falcone","Portiere Para-Tutto","Miracoli continui tra i pali.","Salva il risultato ogni gara."],
-                    [12,"Danilo Veiga","Terzino Portoghese","Spinta dinamica e chiusure.","Sovrapposizioni a destra."],
-                    [4,"Gaspar K.","Centrale Atletico","Elevazione e velocità nei recuperi.","Marca stretto la punta."],
-                    [5,"Tiago Gabriel","Centrale Impostazione","Uscite pulite da dietro.","Comanda la linea a 4."],
-                    [25,"Gallo","Terzino / Piazzati","Punizioni, angoli e gamba a sinistra.","Sostiene l'ala sinistra."],
-                    [29,"Coulibaly","Mezzala Muscolare","Duelli fisici a metà campo.","Inserimenti a supporto."],
-                    [8,"Ilic","Regista Mancino","Geometrie, punizioni e angoli.","Protegge i centrali."],
-                    [10,"Berisha M.","Mezzala Dinamica","Corsa, pressione e calci d'angolo.","Cuce mediana e attacco."],
-                    [50,"Pierotti","Ala Destra","Dribbling, rigori e fisicità.","Taglio dentro al campo."],
-                    [11,"Geubbels","Centravanti Mobile","1° rigorista, attacco spazio.","Attacca il 1° palo."],
-                    [7,"Monteiro J.","Ala Sinistra","Scatto bruciante 1vs1.","Punta il fondo per crossare."]
-                ]
-            },
-            vanoli: {
-                nome:"Paolo Vanoli", cat:"serie_a", team:"Fiorentina", key:"fiorentina", color:"#9333ea", mod:"4-2-3-1", espnAliases:["fiorentina"],
-                stileTag:"4-2-3-1 Qualità & Fantasia", fil:"Piazzati di Fagioli e Mastantuono, ballottaggio Pongracic-Ranieri e Pellegrino-Beto",
-                essay:"Vanoli guida una Fiorentina dal tasso tecnico altissimo: Pongračić/Ranieri e Valdepenas davanti a De Gea, Fagioli e Ndour/Oulaï in mediana, e il tridente fantastico Mastantuono-Gonçalves-Njie dietro a Mateo Pellegrino.",
-                forza:"Tasso tecnico sulla trequarti (Mastantuono, Goncalves P., Fagioli).", debole:"Equilibrio difensivo precario (21 gol subiti).",
-                metrics:{Possesso:64, Pressing:74, Verticalita:80, Ampiezza:82},
-                fasi:[["Uscita su Fagioli e Mastantuono","Palla rapida ai piedi magici dei fantasisti."],["Spinta Terzini","Jiménez e João Mário offrono sovrapposizioni continue."],["Zona 14","Goncalves P. galleggia alle spalle della punta."],["Cross per Pellegrino","Pellegrino e Beto attaccano l'area piccola."]],
-                sp:[["Mastantuono","Pellegrino M.","Goncalves P."],["Mastantuono","Fagioli"],["Fagioli","Mastantuono","Goncalves P."]],
-                ball:[[51,"Pongracic","Ranieri L.",49,2],[55,"Ndour","Oulai",45,5],[51,"Goncalves P.","Njie",49,8],[51,"Valdepenas","Viery",49,3],[51,"Pellegrino M.","Beto",49,10]],
-                xi:[
-                    [43,"De Gea","Portiere Esperienza","Parate di pura classe e leadership.","Comanda la linea a 4."],
-                    [2,"Jiménez Á.","Terzino Elettrico","Accelerazioni brucianti a destra.","Sovrapposizioni a Mastantuono."],
-                    [5,"Pongracic","Centrale Leader","Fisico imponente e duelli aerei.","Muro centrale."],
-                    [6,"Valdepenas","Centrale Giovane","Palleggio pulito e recuperi.","Copre in velocità."],
-                    [21,"João Mário","Terzino Sinistro","Tecnica e spinta fluida.","Offre ampiezza a sinistra."],
-                    [27,"Ndour","Mediano Fisico","Strapotere atletico e contrasti.","Rompe le linee centrali."],
-                    [44,"Fagioli","Regista / Piazzati","Punizioni, angoli e geometrie pure.","Equilibra i 4 attaccanti."],
-                    [30,"Mastantuono","Fenomeno (4 Gol)","1° rigorista, punizioni e angoli.","Taglia dentro sul mancino."],
-                    [10,"Goncalves P.","Stella Portoghese","Fiuto del gol e assist.","Rifinitore in Zona 14."],
-                    [11,"Njie","Ala Sinistra","Scatto e 1vs1 fulmineo.","Punta il fondo per crossare."],
-                    [32,"Pellegrino M.","Centravanti Fisico","Lotta aerea e 4 gol.","Attacca sui cross."]
-                ]
-            },
-            gilardino: {
-                nome:"Alberto Gilardino", cat:"serie_a", team:"Parma", key:"parma", color:"#facc15", mod:"3-5-2", espnAliases:["parma"],
-                stileTag:"3-5-2 Pragmatico & Piazzati", fil:"Difesa con Diego Carlos, regia di Bernabé e Nicolussi Caviglia, ballottaggio Tourè E.-Lontani",
-                essay:"Gilardino ha portato ordine al Parma imponendo il suo solido 3-5-2: esperienza di Diego Carlos dietro con Delprato, qualità sui piazzati di Bernabé, Valeri e Nicolussi Caviglia, e ballottaggi vivi tra Sierro/Fabbian e Touré E./Lontani.",
-                forza:"Solidità ritrovata col 3-5-2, qualità balistica di Bernabé e Valeri, peso di Diego Carlos.", debole:"Fatica nel produrre occasioni contro difese schierate.",
-                metrics:{Possesso:45, Pressing:72, Verticalita:88, Ampiezza:80},
-                fasi:[["Blocco 5-3-2","I quinti scivolano chiudendo subito le fasce."],["Regia di Bernabé & Sierro","Dettano i ritmi e lanciano lungo per le punte."],["Inserimenti Sierro/Fabbian","Accompagnano costantemente in area."],["Ripartenza Tourè E.","Verticalizzazione rapida per l'atletismo di Tourè."]],
-                sp:[["Bernabè","Valeri","Sierro"],["Bernabè","Nicolussi C."],["Bernabè","Nicolussi C.","Valeri"]],
-                ball:[[55,"Tourè E.","Lontani",45,9],[55,"Sierro","Fabbian",45,6],[51,"Diego Carlos","Ndiaye",49,3]],
-                xi:[
-                    [31,"Suzuki","Portiere Moderno","Reattività tra i pali e rilanci.","Guida la difesa a 3."],
-                    [15,"Delprato","Braccetto Capitano","Anticipi puliti e letture difensive.","Copre a destra."],
-                    [5,"Troilo","Centrale Fisico","Stacco aereo e marcatura dura.","Perno centrale di Gilardino."],
-                    [3,"Diego Carlos","Centrale Esperienza","Forza fisica brasiliana e leadership.","Protegge alle spalle di Valeri."],
-                    [8,"Cremaschi","Quinto di Corsa","Dinamismo americano a tutta fascia.","Spinta continua a destra."],
-                    [10,"Bernabé","Regista / Tuttofare","1° rigorista, punizioni e angoli.","Dirige ogni giocata."],
-                    [4,"Sierro","Mediano / Rigorista","Ordine, lanci e schermo.","Dirige la mediana."],
-                    [14,"Nicolussi C.","Mezzala Balistica","Punizioni, angoli e tiro da fuori.","Supporta le punte."],
-                    [14,"Valeri","Quinto Crossatore","Traversoni tesi, rigori e angoli.","Spinge fino al fondo."],
-                    [9,"Tourè E.","Seconda Punta Freccia","Velocità e strappi in campo aperto.","Cuce il gioco."],
-                    [13,"Romero J.D.","Centravanti Argentino","Fame sotto porta e lotta.","Attacca l'area piccola."]
-                ]
-            },
-            daversa: {
-                nome:"Roberto D'Aversa", cat:"serie_a", team:"Sassuolo", key:"sassuolo", color:"#16a34a", mod:"3-5-2", espnAliases:["sassuolo"],
-                stileTag:"Scossa Compatta & Ripartenza", fil:"Tutto sui piazzati di Berardi-Laurientè, tanti ballottaggi aperti per D'Aversa",
-                essay:"Appena arrivato il 10 novembre dopo Aquilani, D'Aversa sta ridisegnando l'11 titolare affidandosi a tanti ballottaggi (Muric/Turati, Doig/Obrador, Thorstvedt/Bakola, Candè/Caleta-Car, Van Der Brempt/Cinquegrano) e alla classe di Berardi, Esposito e Laurienté.",
-                forza:"Piazzati letali di Berardi e Laurienté, qualità di Esposito Se.", debole:"Tenuta difensiva da ricostruire (23 gol subiti).",
-                metrics:{Possesso:48, Pressing:76, Verticalita:86, Ampiezza:78},
-                fasi:[["Compattezza D'Aversa","Distanze corte per chiudere i buchi centrali."],["Piazzati Berardi","Calci da fermo calibrati al millimetro."],["Strappo Laurienté","Palla nello spazio aperto per la velocità di Laurienté."],["Rifinitura Esposito Se.","Esposito cuce il gioco cercando l'imbucata."]],
-                sp:[["Berardi","Esposito Se.","Laurientè"],["Berardi","Laurientè"],["Berardi","Laurientè","Doig"]],
-                ball:[[51,"Doig","Obrador",49,8],[51,"Van Der Brempt","Cinquegrano",49,4],[51,"Thorstvedt","Bakola",49,7],[51,"Candè","Caleta-Car",49,3],[51,"Muric","Turati",49,0],[51,"Esposito Se.","Bowie",49,9],[51,"Adzic","Bakola",49,5]],
-                xi:[
-                    [1,"Muric","Portiere Titolare","Sicurezza tra i pali e rilanci.","Comanda la linea a 3."],
-                    [4,"Walukiewicz","Braccetto Destro","Anticipo duro e chiusure.","Copre Van Der Brempt."],
-                    [21,"Idzes","Centrale Leader","Fisicità e dominio aereo.","Perno della difesa."],
-                    [5,"Candè","Braccetto Sinistro","Anticipo e fisicità in fascia.","Protegge la sinistra."],
-                    [2,"Van Der Brempt","Quinto Destro","Gamba e spinta sulla fascia.","Sovrapposizioni continue."],
-                    [17,"Adzic","Mezzala di Talento","Tecnica nello stretto e tiro.","Sostiene Matić."],
-                    [8,"Matic","Colosso di Mediana","Esperienza suprema e schermo.","Detta l'uscita difensiva."],
-                    [42,"Thorstvedt","Mezzala d'Assalto","Inserimenti aerei e tiri.","Attacca l'area da dietro."],
-                    [3,"Doig","Quinto Sinistro","Potenza atletica, angoli e cross.","Galoppa sulla mancina."],
-                    [9,"Esposito Se.","Seconda Punta","Qualità negli spazi stretti e rigori.","Lega il gioco per Laurienté."],
-                    [45,"Laurienté","Ala / Freccia","Velocità 1vs1 e punizioni.","Scatta alle spalle dei centrali."]
-                ]
-            },
-            juric: {
-                nome:"Ivan Jurić", cat:"serie_a", team:"Monza", key:"monza", color:"#ef4444", mod:"3-5-2", espnAliases:["monza"],
-                stileTag:"Uomo su Uomo Feroce", fil:"Pessina e Colpani leader sui piazzati, ballottaggi Mota-Zeballos e Robinson-Cutrone",
-                essay:"Jurić applica a Monza il suo marchio storico: pressing asfissiante uomo su uomo. Accanto alla leadership sui calci piazzati di Pessina e Colpani, i ballottaggi caldi riguardano Akinsanmiro/Folorunsho in mezzo e davanti Robinson/Cutrone con Mota/Zeballos e Varela.",
-                forza:"Cinismo di Varela (9 gol!) e Mota, intensità di Akinsanmiro/Folorunsho, piazzati Pessina-Colpani.", debole:"Difesa giovane che concede spazi e gol (21 subiti).",
-                metrics:{Possesso:44, Pressing:92, Verticalita:90, Ampiezza:82},
-                fasi:[["Marcatura Uomo su Uomo","I 3 difensori escono altissimi seguendo l'uomo ovunque."],["Lotta a Centrocampo","Akinsanmiro e Folorunsho mordono su ogni seconda palla."],["Piazzati Colpani-Pessina","Pericoli costanti su punizioni e angoli."],["Sentenza Davanti","Ogni pallone in area è buono per Mota/Varela/Robinson."]],
-                sp:[["Pessina","Cutrone"],["Colpani","Pessina"],["Pessina","Colpani","Ciurria"]],
-                ball:[[51,"Akinsanmiro","Folorunsho",49,5],[51,"Mota","Zeballos",49,10],[51,"Robinson J.","Cutrone",49,9]],
-                xi:[
-                    [1,"Törnqvist","Portiere Svedese","Reattività tra i pali.","Comanda i tre marcatori."],
-                    [4,"Kouadio","Braccetto Destro","Marcatura ruvida sull'uomo.","Rompe la linea aggressivo."],
-                    [5,"Goglichidze","Centrale Georgiano","Anticipo duro e chiusure.","Perno centrale di Jurić."],
-                    [3,"Lucchesi","Braccetto Sinistro","Mancino pulito e contrasti.","Scala a sinistra."],
-                    [84,"Ciurria","Quinto / Angoli","Gamba, cross e calci d'angolo.","Spinge forte sul binario."],
-                    [14,"Akinsanmiro","Mezzala Dinamica","Strappi palla al piede.","Rompe il pressing con velocità."],
-                    [32,"Pessina","Capitano / Rigorista","1° rigorista, angoli e ordine.","Equilibrio a metà campo."],
-                    [28,"Colpani","Mezzala / Punizioni","Punizioni letali e angoli.","Rifinitore sul centro-sinistra."],
-                    [21,"Mangas","Quinto Sinistro","Cross tesi e tiro da fuori.","Ampiezza costante."],
-                    [11,"Robinson J.","Seconda Punta","Pressing e assist in area.","Gira intorno alla punta."],
-                    [47,"Mota","Punta (Varela 9 gol!)","Dribbling, tagli e fisicità.","Attacca ogni pallone in area."]
-                ]
-            },
-            nicola: {
-                nome:"Davide Nicola", cat:"serie_a", team:"Venezia", key:"venezia", color:"#f97316", mod:"3-5-2", espnAliases:["venezia"],
-                stileTag:"Garra & Ripartenza Fisica", fil:"Busio faro assoluto su rigori, punizioni e angoli; duello Haps-Mazzocchi e coppia Adams-Yeboah",
-                essay:"Nicola guida il Venezia con grinta e compattezza. Gianluca Busio è il cervello totale (1° su rigori, punizioni e calci d'angolo) in ballottaggio tattico con Sohm, dietro alla velocità di Yeboah e alla potenza pura di Akor Adams.",
-                forza:"Forza fisica di Adams e Sohm, piede educato di Busio e Basic sui piazzati.", debole:"Poca precisione sotto porta (9 gol).",
-                metrics:{Possesso:42, Pressing:78, Verticalita:92, Ampiezza:76},
-                fasi:[["Blocco 5-3-2","Tutti dietro la palla con raddoppi continui."],["Regia Piazzati Busio","Busio calcia ogni pallone inattivo per le torri."],["Strappi di Yeboah","Yeboah sfonda negli spazi per servire Adams."],["Cross di Haps/Mazzocchi","Spinta continua sulla corsia sinistra."]],
-                sp:[["Busio","Adams A.","Yeboah J."],["Busio","Basic"],["Busio","Perez K.","Basic"]],
-                ball:[[51,"Haps","Mazzocchi",49,8],[51,"Halhal","Bella-Kotchap",49,1],[51,"Busio","Sohm",49,6]],
-                xi:[
-                    [35,"Stankovic","Portiere Reattivo","Parate tra i pali e uscite.","Dirige la difesa."],
-                    [4,"Halhal","Braccetto Destro","Marcatura energica e recuperi.","Copre Hainaut."],
-                    [5,"Moreno","Centrale Marcatore","Senso della posizione.","Perno centrale a 3."],
-                    [3,"Juan Jesus","Braccetto Esperienza","Lettura e anticipo deciso.","Guida la retroguardia."],
-                    [16,"Hainaut","Quinto Destro","Corsa continua e cross.","Spinge a destra."],
-                    [14,"Perez K.","Mezzala Spagnola","Palleggio e calci d'angolo.","Rifinisce per le punte."],
-                    [6,"Busio","Faro Totale","1° rigorista, punizioni e angoli!","Detta i ritmi."],
-                    [8,"Basic","Mezzala Balistica","Punizioni tagliate e angoli.","Equilibrio a metà campo."],
-                    [5,"Haps","Quinto Sinistro","Velocità e traversoni tesi.","Cross sul 2° palo."],
-                    [10,"Yeboah J.","Seconda Punta","1vs1 fulmineo e rigori.","Crea varchi in area."],
-                    [9,"Adams A.","Centravanti Forza Pura","Potenza atletica e rigori.","Attacca la profondità."]
-                ]
-            },
-            zanetti: {
-                nome:"Paolo Zanetti", cat:"serie_a", team:"Udinese", key:"udinese", color:"#94a3b8", mod:"3-4-2-1", espnAliases:["udinese"],
-                stileTag:"Nuovo Corso Fisico", fil:"Subentrato il 3 nov: Palma-Abankwah, Piotrowski-Miller, Zaniolo-Ekkelenkamp dietro a Davis K.",
-                essay:"Chiamato il 3 novembre dopo Runjaic, Paolo Zanetti punta sulla solidità di Solet e Palma/Abankwah dietro, sul ballottaggio Piotrowski/Miller in mezzo e sulla qualità sui piazzati di Zaniolo ed Ekkelenkamp a servire il rigorista Keinan Davis.",
-                forza:"Strapotere fisico di Solet, Zaniolo e Davis nei duelli corpo a corpo.", debole:"Peggior difesa del torneo (25 gol subiti).",
-                metrics:{Possesso:47, Pressing:76, Verticalita:85, Ampiezza:74},
-                fasi:[["Compattezza","Zanetti lavora sulle distanze tra Palma, Abankwah e Solet."],["Mediana Fisica","Karlström e Piotrowski formano diga muscolare."],["Innesco Zaniolo","Palla sui piedi di Zaniolo sul mezzo spazio destro."],["Sponde Davis K.","Davis difende palla per gli inserimenti."]],
-                sp:[["Davis K.","Zaniolo","Ekkelenkamp"],["Zaniolo","Ekkelenkamp"],["Kamara H.","Ekkelenkamp","Vojvoda"]],
-                ball:[[51,"Piotrowski","Miller L.",49,5],[51,"Palma","Abankwah",49,2]],
-                xi:[
-                    [40,"Okoye","Portiere Gigante","Fisicità imponente tra i pali.","Guida i 3 difensori."],
-                    [30,"Kristensen","Braccetto Destro","Velocità di recupero.","Copre Vojvoda."],
-                    [4,"Palma","Centrale Giovane","Senso della posizione.","Comanda la linea."],
-                    [28,"Solet","Colosso Sinistro","Forza d'impatto mostruosa.","Rompe la linea in avanti."],
-                    [27,"Vojvoda","Quinto Esperto","Gamba, cross e angoli.","Spinta continua a destra."],
-                    [16,"Piotrowski","Mediano Muscolare","Fisicità e tiro da fuori.","Supporta le punte."],
-                    [25,"Karlström","Schermo Mediano","Interdizione continua.","Protegge i 3 centrali."],
-                    [11,"Kamara H.","Quinto Sinistro","Velocità e calci d'angolo.","Arriva sul fondo."],
-                    [10,"Zaniolo","Trequartista Leader","Punizioni e strappi sul mancino.","Converge al centro."],
-                    [32,"Ekkelenkamp","Trequartista Incursore","Punizioni, angoli e tagli.","Attacca alle spalle di Davis."],
-                    [9,"Davis K.","Centravanti Boa","1° rigorista e protegge ogni lancio.","Apre varchi a Zaniolo."]
-                ]
-            },
-            inzaghi: {
-                nome:"Simone Inzaghi", cat:"resto_mondo", team:"Al-Hilal SFC", key:"alhilal", color:"#2563eb", mod:"3-5-2", espnAliases:["al hilal","al-hilal"],
-                stileTag:"3-5-2 Relazionale & Quinti", fil:"Possesso manovrato, braccetti d'attacco e il pupillo Milinković-Savić per Mitrović",
-                essay:"In Arabia Saudita Simone Inzaghi ha esportato il suo celebre 3-5-2 fluido ritrovando il fedelissimo Sergej Milinković-Savić. Costruzione elegante con Bono e Koulibaly, regia balistica di Rúben Neves e cross continui per Mitrović e Milinković-Savić.",
-                forza:"Dominio aereo assoluto, qualità di Neves e Sergej.", debole:"Spazi concessi alle spalle dei quinti in transizione.",
-                metrics:{Possesso:78, Pressing:75, Verticalita:82, Ampiezza:90},
-                fasi:[["Costruzione a Esca","Bono e i centrali attirano la pressione per lanciare."],["Regia Neves","Neves detta ogni tempo con sventagliate da 40m."],["Cross Quinto-Quinto","Lodi e Al-Yami attaccano sul secondo palo."],["Doppio Ariete","Mitrović e Sergej sovrastano qualsiasi marcatura."]],
-                sp:[["Mitrović","Rúben Neves","Milinković-S."],["Rúben Neves","Malcom"],["Rúben Neves","Renan Lodi","Malcom"]],
-                ball:[[60,"Al-Yami","Al-Shahrani",40,4],[65,"Malcom","Marcos Leonardo",35,9]],
-                xi:[
-                    [37,"Y. Bounou","Portiere Regista","Calma serafica coi piedi.","Invita il pressing rivale."],
-                    [87,"Tambakti","Braccetto Destro","Velocità e copertura preventiva.","Protegge alle spalle."],
-                    [3,"K. Koulibaly","Centrale Dominante","Forza fisica e lanci lunghi.","Comanda la linea a 3."],
-                    [5,"Al-Bulayhi","Braccetto Sinistro","Aggressività e anticipo.","Supporta la catena mancina."],
-                    [66,"Al-Yami","Quinto Destro","Corsa e ripiegamento rapido.","Spinge lungo la fascia."],
-                    [22,"S. Milinković-Savić","Mezzala d'Assalto","Centimetri, gol e sponde.","Seconda punta in area."],
-                    [8,"Rúben Neves","Metronomo Balistico","Sventagliate, punizioni e angoli.","Dirige la manovra."],
-                    [29,"Al-Dawsari","Mezzala Creativa","Dribbling stretto e rifinitura.","Combina con Lodi."],
-                    [6,"Renan Lodi","Quinto Sinistro","Ampiezza, angoli e cross tesi.","Serve l'area dal fondo."],
-                    [77,"Malcom","Seconda Punta","Strappi veloci e punizioni.","Attacca alle spalle dei centrali."],
-                    [9,"A. Mitrović","Totem d'Area","1° rigorista e gioco aereo.","Riferimento letale in area."]
-                ]
-            }
-        };
-
-        let standingsData = [
-            { pos:1, key:"gattuso", name:"Lazio", g:11, v:8, n:2, p:1, gf:21, gs:9, pt:26, espnId: null },
-            { pos:2, key:"chivu", name:"Inter", g:11, v:8, n:1, p:2, gf:23, gs:11, pt:25, espnId: null },
-            { pos:3, key:"gasperini", name:"AS Roma", g:11, v:7, n:2, p:2, gf:31, gs:12, pt:23, espnId: null },
-            { pos:4, key:"amorim", name:"AC Milan", g:11, v:7, n:2, p:2, gf:24, gs:12, pt:23, espnId: null },
-            { pos:5, key:"fabregas", name:"Como", g:11, v:6, n:4, p:1, gf:20, gs:11, pt:22, espnId: null },
-            { pos:6, key:"alvini", name:"Frosinone", g:11, v:6, n:2, p:3, gf:23, gs:17, pt:20, espnId: null },
-            { pos:7, key:"spalletti", name:"Juventus", g:11, v:5, n:4, p:2, gf:18, gs:12, pt:19, espnId: null },
-            { pos:8, key:"palladino", name:"Bologna", g:11, v:5, n:3, p:3, gf:16, gs:12, pt:18, espnId: null },
-            { pos:9, key:"pisacane", name:"Cagliari", g:11, v:4, n:4, p:3, gf:10, gs:15, pt:16, espnId: null },
-            { pos:10, key:"allegri", name:"Napoli", g:11, v:4, n:3, p:4, gf:14, gs:13, pt:15, espnId: null },
-            { pos:11, key:"abate", name:"Torino", g:11, v:4, n:3, p:4, gf:16, gs:19, pt:15, espnId: null },
-            { pos:12, key:"sarri", name:"Atalanta", g:11, v:4, n:2, p:5, gf:20, gs:20, pt:14, espnId: null },
-            { pos:13, key:"derossi", name:"Genoa", g:11, v:3, n:4, p:4, gf:16, gs:17, pt:13, espnId: null },
-            { pos:14, key:"difrancesco", name:"Lecce", g:11, v:3, n:2, p:6, gf:8, gs:14, pt:11, espnId: null },
-            { pos:15, key:"vanoli", name:"Fiorentina", g:11, v:2, n:4, p:5, gf:16, gs:21, pt:10, espnId: null },
-            { pos:16, key:"gilardino", name:"Parma", g:11, v:3, n:1, p:7, gf:10, gs:17, pt:10, espnId: null },
-            { pos:17, key:"daversa", name:"Sassuolo", g:11, v:2, n:1, p:8, gf:10, gs:23, pt:7, espnId: null },
-            { pos:18, key:"juric", name:"Monza", g:11, v:2, n:1, p:8, gf:14, gs:21, pt:7, espnId: null },
-            { pos:19, key:"nicola", name:"Venezia", g:11, v:1, n:4, p:6, gf:9, gs:17, pt:7, espnId: null },
-            { pos:20, key:"zanetti", name:"Udinese", g:11, v:1, n:2, p:8, gf:9, gs:25, pt:5, espnId: null }
-        ];
-
-        const topScorers = [
-            ["Gustavo Varela","monza",9,2], ["Donyell Malen","roma",8,0], ["Antonio Raimondo","frosinone",8,0],
-            ["Nikola Krstović","atalanta",7,0], ["Marcus Thuram","inter",6,0], ["Giacomo Calò","frosinone",5,1],
-            ["Alphadjo Cissè","milan",5,0], ["Anastasios Douvikas","como",5,0], ["Daniel Maldini","cagliari",5,1],
-            ["Adrien Rabiot","milan",5,0], ["Kevin De Bruyne","napoli",4,1], ["Lautaro Martínez","inter",4,0],
-            ["Christian Pulisic","milan",4,0], ["Franco Mastantuono","fiorentina",4,0], ["Davide Frattesi","lazio",4,0]
-        ];
-
-        const topAssists = [
-            ["Mattia Zaccagni","lazio",5,23], ["Juan Miranda","bologna",5,16], ["Paulo Dybala","roma",4,25],
-            ["Giorgi Kvernadze","frosinone",4,26], ["Romano Schmid","frosinone",4,22], ["Farès Ghedjemis","frosinone",4,20],
-            ["Andy Diouf","inter",4,18], ["Adrien Rabiot","milan",4,17], ["Tijjani Noslin","lazio",4,15],
-            ["Charles De Ketelaere","atalanta",3,24], ["Wesley","roma",3,23], ["Matías Soulé","roma",3,21],
-            ["Nico Paz","como",3,18], ["Nuno Tavares","lazio",3,15], ["Ruben Belghali","torino",3,12]
-        ];
-
-        let currentDevice = 'desktop', catAttiva = 'serie_a', misterAttivo = 'gattuso';
-        let showAllArrows = false, showZones = false, useLiveXI = false;
-        let liveMatchCache = {}, swappedSlots = {};
-
-        function chiudiModalSubito(t) {
-            currentDevice = t;
-            const m = document.getElementById('device-modal');
-            if(m) m.remove();
-            document.body.classList.toggle('mobile-mode', t === 'mobile');
-            document.getElementById('view-icon').innerText = t === 'mobile' ? '💻' : '📱';
-            document.getElementById('view-text').innerText = t === 'mobile' ? 'PC' : 'Mobile';
-        }
-        function toggleDispositivo() { chiudiModalSubito(currentDevice === 'mobile' ? 'desktop' : 'mobile'); }
-        function toggleDropdown(e) { e.stopPropagation(); document.getElementById('coach-dropdown').classList.toggle('open'); }
-        document.addEventListener('click', e => { const d=document.getElementById('coach-dropdown'); if(d && !d.contains(e.target)) d.classList.remove('open'); });
-        function toggleZones() { showZones = !showZones; document.getElementById('zones-layer').classList.toggle('visible', showZones); document.getElementById('btn-zones').classList.toggle('active', showZones); }
-        function toggleAllArrows() { showAllArrows = !showAllArrows; document.getElementById('btn-all-arrows').classList.toggle('active', showAllArrows); document.querySelectorAll('.tactical-arrow').forEach(a => a.classList.toggle('active', showAllArrows)); }
-        function toggleLiveLineup() { useLiveXI = !useLiveXI; document.getElementById('btn-live-xi').classList.toggle('active', useLiveXI); aggiornaScheda(); }
-
-        function matchCoachKey(teamName) {
-            const lower = teamName.toLowerCase();
-            for (let k in database) { if (database[k].espnAliases?.some(a => lower.includes(a))) return k; }
-            return null;
-        }
-
-        async function syncLiveStandings(manual = false) {
-            const badgeText = document.getElementById('live-status-text');
-            if (manual) badgeText.innerText = "AGGIORNAMENTO...";
-            try {
-                let res = await fetch("https://site.web.api.espn.com/apis/v2/sports/soccer/ita.1/standings?season=2026");
-                if (!res.ok) res = await fetch("https://site.web.api.espn.com/apis/v2/sports/soccer/ita.1/standings");
-                const json = await res.json();
-                const entries = json?.children?.[0]?.standings?.entries;
-                if (entries && entries.length >= 18) {
-                    const parsed = [];
-                    entries.forEach((entry, idx) => {
-                        const cKey = matchCoachKey(entry.team.displayName || entry.team.name);
-                        const getStat = n => { const s = entry.stats.find(x => x.name === n); return s ? parseInt(s.value) : 0; };
-                        if (cKey) {
-                            database[cKey].espnId = entry.team.id;
-                            parsed.push({
-                                pos: getStat("rank") || (idx + 1), key: cKey, name: database[cKey].team,
-                                g: getStat("gamesPlayed"), v: getStat("wins"), n: getStat("ties"), p: getStat("losses"),
-                                gf: getStat("pointsFor"), gs: getStat("pointsAgainst"), pt: getStat("points"), espnId: entry.team.id
-                            });
-                        }
-                    });
-                    if (parsed.length > 0) {
-                        parsed.sort((a,b) => a.pos - b.pos);
-                        standingsData = parsed;
-                        badgeText.innerText = "LIVE SYNC ATTIVO";
-                        document.getElementById('standings-subtitle').innerText = "Classifica sincronizzata in tempo reale • Clicca una squadra";
-                        renderStandings(); renderDropdownList(); fetchLastMatchLineup(misterAttivo);
-                    }
-                }
-            } catch (err) { badgeText.innerText = "SERIE A 26/27"; }
-        }
-
-        async function fetchLastMatchLineup(misterKey) {
-            const m = database[misterKey];
-            const infoEl = document.getElementById('last-match-info');
-            if (!m || m.cat !== 'serie_a' || !m.espnId) {
-                infoEl.innerHTML = `<span>📋</span> <span><strong>XI Probabile Ufficiale 26/27</strong> (${m.mod})</span>`;
-                return;
-            }
-            if (liveMatchCache[misterKey]) { applicaDatiUltimaGara(misterKey, liveMatchCache[misterKey]); return; }
-            try {
-                const schedRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/${m.espnId}/schedule?season=2026`);
-                const schedJson = await schedRes.json();
-                const completed = (schedJson.events || []).filter(ev => ev.competitions?.[0]?.status?.type?.completed);
-                if (completed.length > 0) {
-                    completed.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    const lastEv = completed[0];
-                    const comp = lastEv.competitions[0];
-                    const home = comp.competitors.find(c => c.homeAway === 'home');
-                    const away = comp.competitors.find(c => c.homeAway === 'away');
-                    const matchTitle = `${home.team.shortDisplayName} ${home.score?.displayValue || 0}-${away.score?.displayValue || 0} ${away.team.shortDisplayName}`;
-                    const matchDate = new Date(lastEv.date).toLocaleDateString('it-IT', { day:'2-digit', month:'short' });
-
-                    const sumRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=${lastEv.id}`);
-                    const sumJson = await sumRes.json();
-                    const teamRoster = (sumJson.rosters || []).find(r => r.team.id === m.espnId);
-                    let starters = [];
-                    if (teamRoster?.roster) {
-                        starters = teamRoster.roster.filter(p => p.starter).map(p => ({
-                            num: p.jersey || "?", nome: p.athlete?.shortName || p.athlete?.displayName || "Giocatore",
-                            pos: p.position?.abbreviation || "M"
-                        }));
-                    }
-                    const payload = { title: matchTitle, date: matchDate, starters };
-                    liveMatchCache[misterKey] = payload;
-                    if (misterAttivo === misterKey) applicaDatiUltimaGara(misterKey, payload);
-                }
-            } catch (e) {
-                infoEl.innerHTML = `<span>📋</span> <span><strong>XI Probabile Verificato</strong> (${m.mod})</span>`;
-            }
-        }
-
-        function applicaDatiUltimaGara(misterKey, matchData) {
-            const infoEl = document.getElementById('last-match-info');
-            const m = database[misterKey];
-            const hasStarters = matchData.starters && matchData.starters.length === 11;
-            infoEl.innerHTML = `<span>⚽</span> <span>Ultima gara (<strong>${matchData.date}</strong>): <strong>${matchData.title}</strong> ${hasStarters && useLiveXI ? '• <span style="color:var(--accent-green);">XI Live</span>' : '• <span style="color:var(--accent-amber);">XI Probabile</span>'}</span>`;
-            document.getElementById('btn-live-xi').classList.toggle('active', useLiveXI && hasStarters);
-            if (useLiveXI && hasStarters) renderCampo(m, matchData.starters);
-            else renderCampo(m, null);
-        }
-
-        function selezionaCategoria(cat) {
-            catAttiva = cat;
-            document.getElementById('btn-cat-seriea').classList.toggle('active', cat === 'serie_a');
-            document.getElementById('btn-cat-mondo').classList.toggle('active', cat === 'resto_mondo');
-            for (let k in database) { if (database[k].cat === cat) { misterAttivo = k; break; } }
-            renderDropdownList(); aggiornaScheda();
-        }
-
-        function renderDropdownList() {
-            const listEl = document.getElementById('dropdown-menu-list');
-            let keys = Object.keys(database).filter(k => database[k].cat === catAttiva);
-            if (catAttiva === 'serie_a') {
-                keys.sort((a, b) => (standingsData.find(s=>s.key===a)?.pos||99) - (standingsData.find(s=>s.key===b)?.pos||99));
-            }
-            listEl.innerHTML = keys.map(k => {
-                const m = database[k];
-                const rank = standingsData.find(s => s.key === k)?.pos;
-                return `
-                    <div class="picker-item ${k === misterAttivo ? 'active' : ''}" onclick="selezionaMister('${k}')">
-                        <div class="item-identity">
-                            <img src="${LOGOS[m.key]}" alt="" onerror="this.style.visibility='hidden'">
-                            <div><div class="item-coach">${m.nome}</div><div class="item-team">${rank ? rank+'° ' : ''}${m.team}</div></div>
-                        </div>
-                        <span class="item-system-tag">${m.mod}</span>
-                    </div>`;
-            }).join('');
-        }
-
-        function selezionaMister(k) {
-            misterAttivo = k; swappedSlots = {};
-            document.getElementById('coach-dropdown').classList.remove('open');
-            renderDropdownList(); aggiornaScheda();
-        }
-
-        function aggiornaScheda() {
-            const m = database[misterAttivo];
-            document.documentElement.style.setProperty('--accent-club', m.color || '#38bdf8');
-            const rank = standingsData.find(s => s.key === misterAttivo)?.pos;
-            const rankStr = rank ? `${rank}° ` : '';
-
-            document.getElementById('dropdown-active-name').innerText = m.nome;
-            document.getElementById('dropdown-active-team').innerText = rankStr + m.team;
-            document.getElementById('dropdown-active-logo').src = LOGOS[m.key];
-            document.getElementById('dropdown-active-logo').style.visibility = 'visible';
-
-            document.getElementById('team-logo-img').src = LOGOS[m.key];
-            document.getElementById('team-logo-img').style.visibility = 'visible';
-            document.getElementById('coach-name').innerText = m.nome;
-            document.getElementById('coach-style-tag').innerText = m.stileTag;
-            document.getElementById('coach-team').innerText = rankStr + m.team;
-            document.getElementById('coach-philosophy').innerText = m.fil;
-            document.getElementById('coach-system').innerText = m.mod;
-
-            document.getElementById('coach-essay').innerText = m.essay;
-            document.getElementById('coach-strengths').innerText = m.forza;
-            document.getElementById('coach-weaknesses').innerText = m.debole;
-
-            document.getElementById('metrics-container').innerHTML = Object.entries(m.metrics).map(([lbl, val]) => `
-                <div class="metric-row">
-                    <div class="metric-head"><span>${lbl}</span><span>${val}/100</span></div>
-                    <div class="metric-bar-bg"><div class="metric-bar-fill" style="width:${val}%"></div></div>
-                </div>`).join('');
-
-            document.getElementById('fasi-container').innerHTML = m.fasi.map(f => `
-                <div class="phase-card"><div class="phase-card-title">${f[0]}</div><p>${f[1]}</p></div>`).join('');
-
-            renderSetPieces(m);
-            renderBallottaggi(m);
-            renderCampo(m, null);
-            fetchLastMatchLineup(misterAttivo);
-        }
-
-        function renderSetPieces(m) {
-            const sp = m.sp || [[],[],[]];
-            const fmt = arr => arr.map((n, i) => `<div class="sp-player"><span class="sp-rank">${i+1}.</span><span>${n}</span></div>`).join('');
-            document.getElementById('sp-pen').innerHTML = fmt(sp[0]);
-            document.getElementById('sp-fk').innerHTML = fmt(sp[1]);
-            document.getElementById('sp-ck').innerHTML = fmt(sp[2]);
-        }
-
-        function renderBallottaggi(m) {
-            const container = document.getElementById('ballottaggi-list');
-            if (!m.ball || m.ball.length === 0) {
-                container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted);">Nessun ballottaggio aperto.</div>`;
-                return;
-            }
-            container.innerHTML = m.ball.map((b, bIdx) => {
-                const isSwapped = swappedSlots[b[4]];
-                const leftName = isSwapped ? b[2] : b[1];
-                const rightName = isSwapped ? b[1] : b[2];
-                const pctL = isSwapped ? b[3] : b[0];
-                const pctR = isSwapped ? b[0] : b[3];
-
-                return `
-                    <div class="ball-row" onclick="scambiaBallottaggio(${bIdx})" title="Clicca per mettere ${rightName} sul campo">
-                        <div class="ball-names">
-                            <span class="ball-pct-left">${pctL}%</span>
-                            <div class="ball-players">${leftName} <span class="sep">-</span> <span class="backup">${rightName}</span></div>
-                            <span class="ball-pct-right">${pctR}%</span>
-                        </div>
-                        <div class="ball-bar-track"><div class="ball-bar-fill" style="width:${pctL}%;"></div></div>
-                    </div>`;
-            }).join('');
-        }
-
-        function scambiaBallottaggio(bIdx) {
-            const m = database[misterAttivo];
-            const b = m.ball[bIdx];
-            if (!b) return;
-            const slotIdx = b[4];
-            swappedSlots[slotIdx] = !swappedSlots[slotIdx];
-            renderBallottaggi(m);
-            renderCampo(m, null);
-            focusGiocatore(slotIdx + 1);
-        }
-
-        function renderCampo(m, liveStarters) {
-            const playersLayer = document.getElementById('players-layer');
-            const arrowsLayer = document.getElementById('arrows-layer');
-            const coords = FORMATIONS[m.mod] || FORMATIONS["4-3-3"];
-
-            arrowsLayer.innerHTML = `<defs><marker id="arrowhead" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 2 L 7 5 L 0 8 z" fill="#ffffff" /></marker></defs>`;
-
-            let displayXI = m.xi.map((p, idx) => {
-                const ballMatch = m.ball?.find(b => b[4] === idx);
-                let pct = 95, nome = p[1], ruolo = p[2];
-                if (ballMatch) {
-                    const isSwapped = swappedSlots[idx];
-                    nome = isSwapped ? ballMatch[2] : ballMatch[1];
-                    pct = isSwapped ? ballMatch[3] : ballMatch[0];
-                }
-                return { id: idx+1, num: p[0], nome, ruolo, task: p[3], mov: p[4], tit: pct, inBall: !!ballMatch };
-            });
-
-            if (liveStarters && liveStarters.length === 11) {
-                const ordered = [
-                    ...liveStarters.filter(x => x.pos === 'G'),
-                    ...liveStarters.filter(x => x.pos === 'D'),
-                    ...liveStarters.filter(x => x.pos === 'M'),
-                    ...liveStarters.filter(x => x.pos === 'F' || x.pos === 'A')
-                ];
-                if (ordered.length === 11) {
-                    displayXI = displayXI.map((slot, i) => {
-                        const liveP = ordered[i];
-                        const matchBase = m.xi.find(b => b[1].toLowerCase().includes(liveP.nome.split(' ').pop().toLowerCase()));
-                        return {
-                            id: i+1, num: liveP.num, nome: liveP.nome, tit: slot.tit, inBall: slot.inBall,
-                            ruolo: matchBase ? matchBase[2] : `${slot.ruolo} (Ultima Gara)`,
-                            task: matchBase ? matchBase[3] : slot.task,
-                            mov: matchBase ? matchBase[4] : slot.mov
-                        };
-                    });
-                }
-            }
-
-            let html = '';
-            displayXI.forEach((p, idx) => {
-                const c = coords[idx];
-                const sx = Math.round(c[0] * 10), sy = Math.round(c[1] * 6.8);
-                const d = c.length >= 6 ? `M ${sx} ${sy} Q ${c[4]} ${c[5]} ${c[2]} ${c[3]}` : `M ${sx} ${sy} L ${c[2]} ${c[3]}`;
-
-                const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                pathEl.setAttribute("d", d);
-                pathEl.setAttribute("class", `tactical-arrow ${showAllArrows ? 'active' : ''}`);
-                pathEl.setAttribute("id", `arrow-${p.id}`);
-                pathEl.setAttribute("marker-end", "url(#arrowhead)");
-                arrowsLayer.appendChild(pathEl);
-
-                html += `
-                    <div class="player-pin" id="pin-${p.id}" style="left:${c[0]}%; top:${c[1]}%;"
-                         onmouseenter="focusGiocatore(${p.id})" onclick="focusGiocatore(${p.id})">
-                        <div class="player-badge">${p.num}</div>
-                        <div class="player-name-tag">${p.nome}</div>
-                    </div>`;
-            });
-
-            playersLayer.innerHTML = html;
-            window.activeDisplayXI = displayXI;
-            focusGiocatore(displayXI[9]?.id || 1);
-        }
-
-        function focusGiocatore(id) {
-            const list = window.activeDisplayXI;
-            if (!list) return;
-            const p = list.find(x => x.id === id);
-            if (!p) return;
-
-            if (!showAllArrows) document.querySelectorAll('.tactical-arrow').forEach(a => a.classList.remove('active'));
-            document.querySelectorAll('.player-pin').forEach(pin => pin.classList.remove('selected'));
-
-            document.getElementById(`arrow-${id}`)?.classList.add('active');
-            document.getElementById(`pin-${id}`)?.classList.add('selected');
-
-            document.getElementById('hud-num').innerText = p.num;
-            document.getElementById('hud-name').innerText = p.nome;
-            document.getElementById('hud-role').innerText = p.ruolo;
-            document.getElementById('hud-task').innerText = p.task;
-            document.getElementById('hud-movement').innerText = p.mov;
-
-            const titEl = document.getElementById('hud-tit');
-            titEl.innerText = `${p.tit}% TIT`;
-            titEl.classList.toggle('warn', p.inBall);
-        }
-
-        function renderStandings() {
-            document.getElementById('standings-body').innerHTML = standingsData.map(row => {
-                let zoneClass = row.pos <= 4 ? 'pos-ucl' : row.pos <= 6 ? 'pos-uel' : row.pos >= 18 ? 'pos-rel' : '';
-                const dr = row.gf - row.gs;
-                const clubKey = database[row.key]?.key;
-                return `
-                    <tr onclick="vaiASquadra('${row.key}')">
-                        <td><span class="pos-badge ${zoneClass}">${row.pos}</span></td>
-                        <td><div class="team-cell"><img src="${LOGOS[clubKey]}" alt="" onerror="this.style.visibility='hidden'"><span>${row.name}</span></div></td>
-                        <td class="pts-cell">${row.pt}</td><td>${row.g}</td><td>${row.v}</td><td>${row.n}</td><td>${row.p}</td>
-                        <td>${row.gf}</td><td>${row.gs}</td><td style="color:${dr>=0?'var(--accent-green)':'var(--accent-red)'}">${dr>0?'+'+dr:dr}</td>
-                    </tr>`;
-            }).join('');
-        }
-
-        function renderLeaders() {
-            document.getElementById('scorers-body').innerHTML = topScorers.map((s, i) => `
-                <tr><td style="font-weight:800;color:var(--text-muted);">${i+1}</td><td style="font-weight:700;color:#fff;">${s[0]}</td>
-                <td><div class="team-cell"><img src="${LOGOS[s[1]]}" alt=""><span style="font-weight:500;text-transform:capitalize;">${s[1]}</span></div></td>
-                <td class="pts-cell" style="color:var(--accent-amber);">${s[2]} ${s[3]>0?`<small style="color:var(--text-muted);font-weight:500;">(${s[3]} rig)</small>`:''}</td></tr>`).join('');
-
-            document.getElementById('assists-body').innerHTML = topAssists.map((a, i) => `
-                <tr><td style="font-weight:800;color:var(--text-muted);">${i+1}</td><td style="font-weight:700;color:#fff;">${a[0]}</td>
-                <td><div class="team-cell"><img src="${LOGOS[a[1]]}" alt=""><span style="font-weight:500;text-transform:capitalize;">${a[1]}</span></div></td>
-                <td class="pts-cell" style="color:var(--accent-blue);">${a[2]} <small style="color:var(--text-muted);font-weight:500;">(${a[3]} KP)</small></td></tr>`).join('');
-        }
-
-        function vaiASquadra(key) {
-            if (!database[key]) return;
-            catAttiva = 'serie_a';
-            document.getElementById('btn-cat-seriea').classList.add('active');
-            document.getElementById('btn-cat-mondo').classList.remove('active');
-            selezionaMister(key); switchTab('campo', document.getElementById('tab-btn-campo'));
-        }
-
-        function switchTab(id, btnEl) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.sec-tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(btnEl) btnEl.classList.add('active');
-        }
-
-        window.onload = function() {
-            renderStandings(); renderLeaders(); selezionaCategoria('serie_a'); syncLiveStandings(false);
-        };
-    </script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
-```
